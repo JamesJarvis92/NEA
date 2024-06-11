@@ -1,7 +1,7 @@
 import pygame
 
 
-
+#WGYUDSIIAJoB fjKHLSA
 pygame.init()
 swidth = 720
 sheight = 720   ## change cell size based on size of mazes
