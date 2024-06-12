@@ -1,13 +1,12 @@
 import pygame
 
 
-#WGYUDSIIAJoB fjKHLSA
 pygame.init()
 swidth = 720
 sheight = 720   ## change cell size based on size of mazes
 square_size = 80
-MAZE_WIDTH = swidth // square_size
-MAZE_HEIGHT = sheight // square_size 
+mwidth = swidth // square_size
+mheight = sheight // square_size 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 GREEN = (0, 255, 0)
@@ -15,8 +14,8 @@ RED = (255, 0, 0)
 GRAY = (192, 192, 192)
 
 def draw_maze(screen, maze):
-    for y in range(MAZE_HEIGHT):
-        for x in range(MAZE_WIDTH):
+    for y in range(mheight):
+        for x in range(mwidth):
             if maze[y][x] == "0":
                 pygame.draw.rect(screen, BLACK, (x * square_size, y * square_size, square_size, square_size))  ## draws path
             elif maze[y][x] == "1":
@@ -31,7 +30,7 @@ class Player:
     def move(self, dx, dy, maze):
         new_x = self.x + dx
         new_y = self.y + dy
-        if 0 <= new_x < MAZE_WIDTH and 0 <= new_y < MAZE_HEIGHT and maze[new_y][new_x] != "1":  ## checks square trying to move to is valid
+        if 0 <= new_x < mwidth and 0 <= new_y < mheight and maze[new_y][new_x] != "1":  ## checks square trying to move to is valid
             self.x = new_x    ## assigns new position
             self.y = new_y
     def draw(self, screen):
