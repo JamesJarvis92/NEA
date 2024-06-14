@@ -4,4 +4,8 @@ def CreateBlankMaze(size):
         maze.append("0"*size)
     return maze
 
-print(CreateBlankMaze(4))
+
+def pprint(maze):
+    for i in range(len(maze)):
+        print(maze[i])
+
