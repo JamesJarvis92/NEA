@@ -1,6 +1,6 @@
 
 from CreateMaze import *
-from Stack import *
+from stack import *
 import random
 
 #maze = CreateBlankMaze(10)
@@ -61,6 +61,13 @@ def in_maze(maze,pos):
     except:
         return False
 print(in_maze(maze,[1,1]))
+
+def remove_loop(stack,pos): 
+    while stack.isempty() == False: ## while values in stack
+        top = stack.spop()
+        if top == pos: ## if finds pos in stack while removing returns stack without loop
+            stack.push(pos)
+            return stack
 
 def findpath(maze,start):
     directions = ["up","down","left","right"] ## used to make code make more sense
