@@ -2,6 +2,7 @@
 from CreateMaze import *
 from Stack import *
 import random
+
 #maze = CreateBlankMaze(10)
 maze = ["000001000",
         "000001000",
@@ -85,6 +86,7 @@ def findpath(maze,start):
         
     
 print(findpath(maze,[0,0]))
+## add random cell that isn't [0,0] so path has a goal
 ## select start and check not completed
 ## findpath
 ## add path to maze
