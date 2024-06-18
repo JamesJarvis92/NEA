@@ -1,14 +1,14 @@
-from ssl import _PasswordType
+
 from CreateMaze import *
 from Stack import *
 import random
 #maze = CreateBlankMaze(10)
-maze = ["000000000",
-        "000000000",
-        "000000000",
-        "000000000",
-        "000000000",
-        "000000000",
+maze = ["000001000",
+        "000001000",
+        "000001000",
+        "000001000",
+        "000001000",
+        "111111000",
         "000000000",
         "000000000",
         "000000000"]
@@ -50,26 +50,41 @@ def select_start(maze):
                 return [i,j]  ## returns coords as [y,x] because thats how navigating the array works
     return "END"   ## returns when no start nodes left
 
-print(select_start(maze))
+def in_maze(maze,pos):
+    try:
+        x = maze[pos[1]][pos[0]]
+        if pos[1]>=0 and pos[0]>=0:
+            return True
+        else:
+            return False
+    except:
+        return False
+print(in_maze(maze,[1,1]))
 
 def findpath(maze,start):
     directions = ["up","down","left","right"] ## used to make code make more sense
-    path = Stack()  ## stack for path
+    path = Stack(len(maze)*(len(maze[0])))  ## stack for path
     path.push(start) ## add start to stack
-    while is_connected(maze,start) != True: ## while path is not connected
+    while is_connected(maze,path.peek()) != True: ## while path is not connected
+        pos = path.peek()
         direction = random.choice(directions)
+        move_is_valid = True
         if direction == "up":
-            pass
+            new_pos = [pos[0]+1,pos[1]]
         elif direction == "down":
-            pass
+            new_pos = [pos[0]-1,pos[1]]
         elif direction == "left":
-            pass
+            new_pos = [pos[0],pos[1]-1]
         elif direction == "right":
+            new_pos = [pos[0],pos[1]+1]
+        if in_maze(maze,new_pos):    ## need to check there isnt a loop
             pass
-    return path ## return path when connected
+            path.push(new_pos)
+            
+    return path.seestack() ## return path when connected
         
     
-
+print(findpath(maze,[0,0]))
 ## select start and check not completed
 ## findpath
 ## add path to maze

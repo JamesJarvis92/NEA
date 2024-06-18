@@ -39,3 +39,6 @@ class Stack:
   
   def peek(self):
     return self.stack[self.top]
+  
+  #def __str__(self) -> str:
+   # return 
