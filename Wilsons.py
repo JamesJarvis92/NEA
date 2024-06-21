@@ -107,7 +107,7 @@ def findpath(maze,start):
     directions = ["up","down","left","right"] ## used to make code make more sense
     path = Stack(1000)  ## stack for path
     path.push(start) ## add start to stack
-    while is_connected_to_maze(maze,path.peek()) != True: ## while path is not connected
+    while is_connected_to_maze(maze,path.peek()) != True: ## while  path is not connected
         pos = path.peek()
         direction = random.choice(directions)
         move_is_valid = True
