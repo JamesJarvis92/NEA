@@ -55,7 +55,7 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            elif event.type == pygame.KEYDOWN:    ## does movements
+            elif event.type == pygame.KEYDOWN:    ## does movements ## will need to do it so player moves in maze aswell
                 if event.key == pygame.K_UP:
                     player.move(0, -1, maze)
                 elif event.key == pygame.K_DOWN:
