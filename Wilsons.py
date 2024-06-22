@@ -1,6 +1,6 @@
 
 from CreateMaze import *
-from Stack import *
+from stack import *
 import random
 
 #maze = CreateBlankMaze(10)
@@ -9,10 +9,10 @@ maze = ["000000000",
         "000000000",
         "000000000",
         "000000000",
-        "000001000",
         "000000000",
         "000000000",
-        "000000000"]
+        "000000000",
+        "000000100"]
 
 pprint(maze)
 
@@ -44,11 +44,14 @@ def is_connected_to_maze(maze,pos):
 
 
 def select_start(maze):
-    for i in range(len(maze)):
-        for j in range(len(maze[i])):
-            if is_connected_to_maze(maze,[j,i]) == False and maze[j][i] == "0":  ## checks node isn't connected to maze and is open 
-                return [i,j]  ## returns coords as [y,x] because thats how navigating the array works
-    return "END"   ## returns when no start nodes left
+    for i in range(len(maze)**3):
+        length = len(maze)-1
+        y = random.randint(0,length)
+        x = random.randint(0,length)
+        if maze[y][x] == "0" and is_connected_to_maze(maze,[y,x]) == False:
+            return [x,y]
+    return "END"
+
 
 def in_maze(maze,pos):
     try:
@@ -92,14 +95,14 @@ def remove_loop(stack):
         
 def add_to_maze(path,maze): ## add path to maze
     for node in path:
-        print(node[0],node[1])
+        #print(node[0],node[1])
         row = maze[node[0]]
         row = list(row)
         row[node[1]] = "1"
         row = "".join(row)
         maze[node[0]] = row
         #pprint(maze)
-        print("\n")
+        #print("\n")
     return maze
 
 def findpath(maze,start):
@@ -130,17 +133,18 @@ def findpath(maze,start):
         
     
 path = findpath(maze,[0,0])
-print(path)
 
-pprint(add_to_maze(path,maze))
+maze = add_to_maze(path,maze)
+pprint(maze)
+x = select_start(maze)
+path = findpath(maze,x)
+print(x)
+maze = add_to_maze(path,maze)
+pprint(maze)
 
 ## add random cell that isn't [0,0] so path has a goal
 ## select start and check not completed
 ## findpath
 ## add path to maze
-"""
-def WilsonsMaze(size):
-    maze = CreateBlankMaze(size) ## make blank maze square
-    while select_start(maze) != "END":  ## ends when maze is complete
-        pos = select_start(maze) ## select start positon
-"""
+
+
