@@ -9,3 +9,6 @@ def pprint(maze):
     for i in range(len(maze)):
         print(maze[i])
 
+def add_start_end(maze):
+    pass
+

@@ -3,7 +3,7 @@ from CreateMaze import *  ## coords are wrong way round somewhere can't work out
 from stack import *
 import random
 
-maze = CreateBlankMaze(9)
+maze = CreateBlankMaze(15)
 """
 maze = ["000000000",
         "000000000",
@@ -15,7 +15,6 @@ maze = ["000000000",
         "000000000",
         "000000000"]
 """
-#pprint(maze)
 
 
 def is_connected_to_maze(maze,pos):
@@ -64,7 +63,7 @@ def in_maze(maze,pos):
             return False
     except:
         return False
-#print(in_maze(maze,[1,1]))
+
 
 
 def surrounding_nodes(node):
@@ -98,14 +97,11 @@ def remove_loop(stack):
         
 def add_to_maze(path,maze): ## add path to maze
     for node in path:
-        #print(node[0],node[1])
         row = maze[node[0]]
         row = list(row)
         row[node[1]] = "1"
         newrow = "".join(row)
         maze[node[0]] = newrow
-        #pprint(maze)
-        #print("\n")
     return maze
 
 
@@ -127,7 +123,6 @@ def findpath(maze,start):
                 new_pos = [pos[0],pos[1]-1]
             elif direction == "right":
                 new_pos = [pos[0],pos[1]+1]
-            #print(path.seestack())
             if in_maze(maze,new_pos):    ## checks in maze
                 path.push(new_pos)
                 for i in range(remove_loop(path)):
@@ -138,49 +133,20 @@ def findpath(maze,start):
     len_of_path = x.index("#")
     return x[:len_of_path]
         
-"""
-path = findpath(maze,[0,0])
 
-maze = add_to_maze(path,maze)
-pprint(maze)
-print(path)
-print("\n")
-x = select_start(maze)
-path = findpath(maze,x)
-maze = add_to_maze(path,maze)
-pprint(maze)
-print(path)
-print("\n")
-x = select_start(maze)
-path = findpath(maze,x)
-maze = add_to_maze(path,maze)
-
-pprint(maze)
-print(path)
-"""
-## add random cell that isn't [0,0] so path has a goal
-## select start and check not completed
-## findpath
-## add path to maze
-
-## still doesn't work
-
-def WilsonsMazeGen(maze):
+def WilsonsMazeGen(size):
+    maze = CreateBlankMaze(int(size))
     target_node = [select_start(maze)]  ## first node in form [[y,x]]
     maze = add_to_maze(target_node,maze)  ## adds first node
     done = False
-    c = 0
-    while done == False:   ## need to add actual condition
-        c += 1
-        print(c)
+    while done == False:   
         start_node = select_start(maze)
         if start_node == "END":
             return maze
         path = findpath(maze,start_node)
         maze = add_to_maze(path,maze)
-    #return maze
-print("2")
-pprint(WilsonsMazeGen(maze))
-print("1")
 
-##left, right, left
+pprint(WilsonsMazeGen(20))
+
+
+
