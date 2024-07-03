@@ -1,10 +1,10 @@
 import pygame
-
+from Wilsons import *
 
 pygame.init()
 swidth = 720
 sheight = 720   ## change cell size based on size of mazes
-square_size = 40
+square_size = 24 ## need to calculate this based on maze size or just have set sizes for game modes
 mwidth = swidth // square_size
 mheight = sheight // square_size 
 WHITE = (255, 255, 255)
@@ -39,36 +39,7 @@ class Player:
 
 def main():
     screen = pygame.display.set_mode((swidth, sheight))  ## initialises screen
-    """
-    maze = ["001010001",
-        "100011010",
-        "101011011",
-        "100000000",
-        "101010101",
-        "111010101",
-        "101010100",
-        "101010001",
-        "000011211"]
-    """
-    maze = ["01101111110000100100",
-    "01000000011110111111",
-    "01111100010000010010",
-    "00000111111111011111",
-    "00011101100101111001",
-    "11010001110100101011",
-    "00010010000000100000",
-    "01111011111110110111",
-    "11101000100011011110",
-    "10101010100001001011",
-    "10001110001111001000",
-    "11101101100001001111",
-    "10000000100111000001",
-    "11111111100001110001",
-    "00010000111000010111",
-    "01101011101001010001",
-    "10001100001110111111",
-    "10110111110111100101",
-    "01111100001100001101"]
+    maze = WilsonsMazeGen(30) ## change this for a function that adds start and ends and then checks solveable
     player = Player()
     running = True
     won = False
@@ -95,7 +66,7 @@ def main():
     screen.fill(WHITE)
     
     pygame.display.flip()
-    pygame.time.wait(3000)
+    pygame.time.wait(100) ## time end screen stays
     pygame.quit()
 if __name__ == "__main__":
     main()

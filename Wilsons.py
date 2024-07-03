@@ -1,4 +1,3 @@
-
 from CreateMaze import *  
 from stack import *
 import random
@@ -30,14 +29,14 @@ def is_connected_to_maze(maze,pos):
 
 
 def select_start(maze):
-    for i in range(len(maze)**3):
+    for i in range(len(maze)**3): ## how many tries to find open node before gives up
         vertlength = len(maze)-1
         horzlength = len(maze[0])-1
-        y = random.randint(0,vertlength)
+        y = random.randint(0,vertlength)   ## selects random squares
         x = random.randint(0,horzlength)
-        if maze[y][x] == "0" and is_connected_to_maze(maze,[y,x]) == False: 
+        if maze[y][x] == "0" and is_connected_to_maze(maze,[y,x]) == False: ## checks node is open and not connected to maze
             return [y,x]
-    return "END"
+    return "END" ## returns if no node is found
 
 
 def in_maze(maze,pos):
@@ -94,7 +93,7 @@ def findpath(maze,start):
         pos = path.peek()
         direction = random.choice(directions)
         move_is_valid = True
-        try:                            ### try except might be bad
+        try:                            
             if direction == "up":         ## directions 
                 new_pos = [pos[0]-1,pos[1]]
             elif direction == "down":
@@ -105,7 +104,7 @@ def findpath(maze,start):
                 new_pos = [pos[0],pos[1]+1]
             if in_maze(maze,new_pos):    ## checks in maze
                 path.push(new_pos)
-                for i in range(remove_loop(path)):
+                for i in range(remove_loop(path)):  ## removes loop
                     z = path.spop()
         except:
             pass
@@ -120,14 +119,14 @@ def WilsonsMazeGen(size):
     maze = add_to_maze(target_node,maze)  ## adds first node
     done = False
     while done == False:   
-        start_node = select_start(maze)
-        if start_node == "END":
+        start_node = select_start(maze) ## picks start node
+        if start_node == "END": ## checks start node is a node not end
             return maze
         path = findpath(maze,start_node)
         maze = add_to_maze(path,maze)
 
 
-pprint(WilsonsMazeGen(20))
+#pprint(WilsonsMazeGen(20))
 
 
 
