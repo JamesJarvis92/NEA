@@ -125,11 +125,3 @@ def WilsonsMazeGen(size):
         start_node = select_start(maze) ## picks start node
         if start_node == "END": ## checks start node is a node not end
             return maze
-        
-
-
-pprint(add_end(WilsonsMazeGen(12)))
-
-
-
-

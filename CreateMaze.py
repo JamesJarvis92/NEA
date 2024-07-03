@@ -27,7 +27,3 @@ def add_end(maze):
             maze[end_y] = row ## adds goal to maze
             return maze
 
-
-        
-
-
