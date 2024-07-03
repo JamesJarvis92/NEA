@@ -1,5 +1,5 @@
+from Stack import *
 from CreateMaze import *  
-from stack import *
 import random
 
 
@@ -118,15 +118,18 @@ def WilsonsMazeGen(size):
     target_node = [select_start(maze)]  ## first node in form [[y,x]]
     maze = add_to_maze(target_node,maze)  ## adds first node
     done = False
-    while done == False:   
+    start_node = [0,0] ## always starts from [0,0]
+    while done == False:
+        path = findpath(maze,start_node)
+        maze = add_to_maze(path,maze)   
         start_node = select_start(maze) ## picks start node
         if start_node == "END": ## checks start node is a node not end
             return maze
-        path = findpath(maze,start_node)
-        maze = add_to_maze(path,maze)
+        
 
 
-#pprint(WilsonsMazeGen(20))
+pprint(add_end(WilsonsMazeGen(12)))
+
 
 
 
