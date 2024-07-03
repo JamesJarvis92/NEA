@@ -30,7 +30,7 @@ class Player:
     def move(self, dx, dy, maze):
         new_x = self.x + dx
         new_y = self.y + dy
-        if 0 <= new_x < mwidth and 0 <= new_y < mheight and maze[new_y][new_x] != "1":  ## checks square trying to move to is valid
+        if 0 <= new_x < mwidth and 0 <= new_y < mheight and maze[new_y][new_x] != "0":  ## checks square trying to move to is valid
             self.x = new_x    ## assigns new position
             self.y = new_y
     def draw(self, screen):
@@ -39,6 +39,7 @@ class Player:
 
 def main():
     screen = pygame.display.set_mode((swidth, sheight))  ## initialises screen
+    """
     maze = ["001010001",
         "100011010",
         "101011011",
@@ -48,6 +49,17 @@ def main():
         "101010100",
         "101010001",
         "000011211"]
+    """
+    maze = [
+    "101110010",
+    "111011110",
+    "011100011",
+    "000100101",
+    "100101111",
+    "110101000",
+    "011111000",
+    "010001111",
+    "010011000"]
     player = Player()
     running = True
     won = False
