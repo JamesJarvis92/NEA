@@ -10,5 +10,5 @@ def pprint(maze):
         print(maze[i])
 
 def add_start_end(maze):
-    pass
+    pass ## once added need to check it's solvable
 

@@ -3,19 +3,6 @@ from CreateMaze import *  ## coords are wrong way round somewhere can't work out
 from stack import *
 import random
 
-maze = CreateBlankMaze(15)
-"""
-maze = ["000000000",
-        "000000000",
-        "000000000",
-        "000000000",
-        "000000000",
-        "000000000",
-        "000000000",
-        "000000000",
-        "000000000"]
-"""
-
 
 def is_connected_to_maze(maze,pos):
     connected = False
@@ -42,7 +29,6 @@ def is_connected_to_maze(maze,pos):
     return connected
 
 
-
 def select_start(maze):
     for i in range(len(maze)**3):
         vertlength = len(maze)-1
@@ -65,9 +51,9 @@ def in_maze(maze,pos):
         return False
 
 
-
 def surrounding_nodes(node):
     return [[node[0]-1,node[1]],[node[0]+1,node[1]],[node[0],node[1]-1],[node[0],node[1]+1]]
+
 
 def remove_loop(stack):
     loop_lengths = [0]
@@ -82,19 +68,13 @@ def remove_loop(stack):
         if node in path:
             x = path.index(node)
             loop_lengths.append(len(path)-x)   ## append lengths of loops
-            
-
-    for node in path:    ## makes testing work
+    for node in path:    
         stack.push(node)
     stack.push(pos2)
     stack.push(new_pos)
-    
-
     return max(loop_lengths)
     
-        
     
-        
 def add_to_maze(path,maze): ## add path to maze
     for node in path:
         row = maze[node[0]]
@@ -145,6 +125,7 @@ def WilsonsMazeGen(size):
             return maze
         path = findpath(maze,start_node)
         maze = add_to_maze(path,maze)
+
 
 pprint(WilsonsMazeGen(20))
 
