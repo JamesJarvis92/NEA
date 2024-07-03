@@ -1,5 +1,5 @@
 
-from CreateMaze import *  ## coords are wrong way round somewhere can't work out where
+from CreateMaze import *  
 from stack import *
 import random
 
