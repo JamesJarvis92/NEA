@@ -1,9 +1,9 @@
 class Queue:
-  def __init__(self):
+  def __init__(self,size):
     
     self.front = 0
     self.rear = -1
-    self.maxSize = 999
+    self.maxSize = size
     self.queue = ["#" for x in range(self.maxSize)]
     
   def seequeue(self):
@@ -30,15 +30,12 @@ class Queue:
       self.queue[self.rear] = data
       
   def dequeue(self):
-    if isEmpty():
-      print("list is empty")
-    else:
-      return self.queue[self.front] ## linear queue so just need to move front back instead of shift all forward
-      self.front += 1
+    return self.queue[self.front] ## linear queue so just need to move front back instead of shift all forward
+    self.front += 1
       
-myqueue = Queue()
+myqueue = Queue(5)
 myqueue.enqueue("hello1")
 myqueue.enqueue("hello2")
 myqueue.enqueue("hello3")
-myqueue.dequeue()
+print(myqueue.dequeue())
 myqueue.seequeue()
