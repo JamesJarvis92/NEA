@@ -1,7 +1,7 @@
-from Stack import *
+from stack import *
 from CreateMaze import *  
 import random
-
+## install pygame by tools, python, python environment
 
 def is_connected_to_maze(maze,pos):
     connected = False

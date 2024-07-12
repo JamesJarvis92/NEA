@@ -47,7 +47,7 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            elif event.type == pygame.KEYDOWN:    ## does movements ## will need to do it so player moves in maze aswell
+            elif event.type == pygame.KEYDOWN:    ## does movements 
                 if event.key == pygame.K_UP:
                     player.move(0, -1, maze)
                 elif event.key == pygame.K_DOWN:
@@ -56,7 +56,7 @@ def main():
                     player.move(-1, 0, maze)
                 elif event.key == pygame.K_RIGHT:
                     player.move(1, 0, maze)
-        screen.fill(WHITE)
+        screen.fill(WHITE)     ## when finished
         draw_maze(screen, maze)  ## draws maze
         player.draw(screen)
         if maze[player.y][player.x] == "2":  ## checks if player has reached goal

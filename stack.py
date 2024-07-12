@@ -13,7 +13,7 @@ class Stack:
       self.top += 1
       self.stack[self.top] = item
     
-  def spop(self):
+  def spop(self):   ## can't call pop because python already has a .pop()
     if self.top >= 0:
       item = self.stack[self.top]
       self.stack[self.top] = "#"
