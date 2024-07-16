@@ -3,10 +3,10 @@ class Stack:
     self.size = size
     self.stack = []
     self.top = -1
-    for i in range(size):
+    for i in range(size): ## makes stack large array of #'s
       self.stack.append("#")
       
-  def push(self, item):
+  def push(self, item):  ## adds to stack
     if self.top == self.size:
       return "Stack is full"
     else:
@@ -22,22 +22,22 @@ class Stack:
     else:
       return "Can't pop stack is empty"
       
-  def isFull(self):
+  def isFull(self):   ## checks if full
     if self.top == self.size-1:
       return True
     else:
       return False
   
-  def isEmpty(self):
+  def isEmpty(self):    ## checks if empty
     if self.top == -1:
       return True
     else:
       return False
       
-  def seestack(self):
+  def seestack(self):   ## returns stack
     return self.stack
   
-  def peek(self):
+  def peek(self):    ## look at top element of stack
     return self.stack[self.top]
   
   

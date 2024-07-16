@@ -1,6 +1,6 @@
 import random
 
-def CreateBlankMaze(size):
+def CreateBlankMaze(size):   ## creates 2D array of 0's
     maze = []
     for i in range(size):
         maze.append("0"*size)
@@ -12,7 +12,7 @@ def pprint(maze):
         print(maze[i])
 
 
-def add_end(maze):
+def add_end(maze):  ## works for maze with 1's and 0's
     size = len(maze)-1
     end_range = len(maze)//5 ## change how close to bottom right end is
     found = False
@@ -27,3 +27,13 @@ def add_end(maze):
             maze[end_y] = row ## adds goal to maze
             return maze
 
+""" ## not top priority
+def conv_to_image_array(maze):  ## turn maze into array of codes so can draw maze using pixel art
+    img_array = []
+    codes = {"U":1, "D":2, "L":3, "R":4, "UR":5, "UD":6, "UL":7, "RD":8, "RL":9, "DL":10, "URD":11, "URL":12, "UDL":13, "RDL":14, "URDL":15}  ## when worked out which walls each cell has will append code to array
+    for row in maze:   ## makes nested list of required length
+        img_array.append([])
+        
+        
+   ## go around clockwise starting from up to check if wall and append to string if there is a wall
+"""

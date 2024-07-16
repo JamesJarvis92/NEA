@@ -33,9 +33,3 @@ class Queue:
     return self.queue[self.front] ## linear queue so just need to move front back instead of shift all forward
     self.front += 1
       
-myqueue = Queue(5)
-myqueue.enqueue("hello1")
-myqueue.enqueue("hello2")
-myqueue.enqueue("hello3")
-print(myqueue.dequeue())
-myqueue.seequeue()

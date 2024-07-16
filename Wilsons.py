@@ -1,5 +1,7 @@
+## may change so end is alr in maze so path is always corner to corner
+
 from stack import *
-from CreateMaze import *  
+from CreateMaze import *
 import random
 ## install pygame by tools, python, python environment
 
@@ -60,7 +62,7 @@ def remove_loop(stack):
     new_pos = stack.spop() ## removes one wanting to be added
     pos2 = stack.spop()   ## removes one before to avoid false loop
     while stack.isEmpty() == False:
-        path.append(stack.spop())   ## could use a queue instead
+        path.append(stack.spop())   
     if len(path)>1:
         path = path[::-1]
     for node in surrounding_nodes(new_pos):
