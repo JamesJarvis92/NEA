@@ -27,6 +27,8 @@ def add_end(maze):  ## works for maze with 1's and 0's
             maze[end_y] = row ## adds goal to maze
             return maze
 
+
+
 """ ## not top priority
 def conv_to_image_array(maze):  ## turn maze into array of codes so can draw maze using pixel art
     img_array = []
