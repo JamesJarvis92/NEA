@@ -6,7 +6,8 @@
     ## go back to menu
 ## option to play another game or quit
 
-from drawmaze import *
+from Gamemode1 import *
+from Gamemode2 import *
 
 
 WHITE = ((255,255,255))
@@ -56,13 +57,13 @@ fps = 60
 timer = pygame.time.Clock()
 main_menu = True
 font = pygame.font.Font("freesansbold.ttf", 24)
-
+"""
 def draw_menu():
     button = Button("Normal Mode",[300,100],RED,ORANGE,BLACK)
     button.hovering()
     button.draw()
     return button.check_clicked()
-"""
+
 def draw_game():
     button = Button("menu",[350,350],RED,ORANGE,BLACK)
     button.draw()
@@ -74,12 +75,17 @@ run = True
 while run:
     screen.fill("light blue")
     timer.tick(fps)
-    button = Button("Normal Mode",[300,100],RED,ORANGE,BLACK)
-    button.hovering()
-    button.draw()
+    button1 = Button("Normal Mode",[300,100],RED,ORANGE,BLACK)
+    button1.hovering()
+    button1.draw()
+    button2 = Button("2-Player Mode",[300,200],RED,ORANGE,BLACK)
+    button2.hovering()
+    button2.draw()
     pygame.display.flip()
-    if button.check_clicked():
+    if button1.check_clicked():
         gamemode1(screen)
+    if button2.check_clicked():
+        gamemode2(screen)
     
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
