@@ -80,5 +80,5 @@ def gamemode2(screen):
             winner = 2
             running = False
         pygame.display.flip()
-    #return winner
+    return winner
 #print(gamemode2(screen))

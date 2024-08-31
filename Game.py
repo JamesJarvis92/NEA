@@ -85,7 +85,8 @@ while run:
     if button1.check_clicked():
         gamemode1(screen)
     if button2.check_clicked():
-        gamemode2(screen)
+        winner = gamemode2(screen)
+        print(winner)
     
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
