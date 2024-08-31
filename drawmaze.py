@@ -37,8 +37,8 @@ class Player:
         pygame.draw.rect(screen, GREEN, (self.x * square_size, self.y * square_size, square_size, square_size))  ##  draws player
         
 
-def main():
-    screen = pygame.display.set_mode((swidth, sheight))  ## initialises screen
+def gamemode1(screen):
+    #screen = pygame.display.set_mode((swidth, sheight))  ## initialises screen
     maze = add_end(WilsonsMazeGen(30)) ## need to check maze is solvable with exit
     player = Player()
     running = True
@@ -63,10 +63,13 @@ def main():
             won = True
             running = False
         pygame.display.flip()
-    screen.fill(WHITE)
+    #screen.fill(WHITE)
     
-    pygame.display.flip()
-    pygame.time.wait(100) ## time end screen stays
-    pygame.quit()
-if __name__ == "__main__":
-    main()
+    #pygame.display.flip()
+    #pygame.time.wait(100) ## time end screen stays
+    #pygame.quit()
+    
+#gamemode1(screen)   
+
+#if __name__ == "__main__":
+#    main()
