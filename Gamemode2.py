@@ -44,7 +44,7 @@ class Player:
 
 def gamemode2(screen):
     #screen = pygame.display.set_mode((swidth, sheight))  ## initialises screen
-    maze = add_end(WilsonsMazeGen(30)) ## need to check maze is solvable with exit
+    maze = WilsonsMazeGen(30) ## need to check maze is solvable with exit
     player1 = Player(GREEN)
     player2 = Player(BLUE)
     running = True
@@ -83,12 +83,15 @@ def gamemode2(screen):
         pygame.display.flip()
         
     ## shows winner
-    win_text = "Winner is player " + str(winner)
-    font = pygame.font.Font("freesansbold.ttf", 50)
-    text = font.render(win_text,True,WHITE)
-    screen.blit(text,(200,300))
-    pygame.display.flip()    
-    time.sleep(1)
+    try:
+        win_text = "Winner is player " + str(winner)
+        font = pygame.font.Font("freesansbold.ttf", 50)
+        text = font.render(win_text,True,WHITE)
+        screen.blit(text,(200,300))
+        pygame.display.flip()    
+        time.sleep(1)
+    except:
+        pass
 #print(gamemode2(screen))
 
 

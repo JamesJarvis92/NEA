@@ -39,7 +39,7 @@ class Player:
 
 def gamemode1(screen):
     #screen = pygame.display.set_mode((swidth, sheight))  ## initialises screen
-    maze = add_end(WilsonsMazeGen(30)) ## need to check maze is solvable with exit
+    maze = WilsonsMazeGen(30) ## need to check maze is solvable with exit
     player = Player()
     running = True
     won = False

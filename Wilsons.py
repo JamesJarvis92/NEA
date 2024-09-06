@@ -126,4 +126,5 @@ def WilsonsMazeGen(size):
         maze = add_to_maze(path,maze)   
         start_node = select_start(maze) ## picks start node
         if start_node == "END": ## checks start node is a node not end
+            maze = add_end(maze)
             return maze
