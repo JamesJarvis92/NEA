@@ -88,8 +88,9 @@ while run:
     if button1.check_clicked():   ### add time to complete and leaderboard,   countdown to start using while loop and sleep(1000)
         gamemode1(screen)
     if button2.check_clicked():   ### add winner screen
-        winner = gamemode2(screen)
-        print(winner)
+        gamemode2(screen)
+        
+        
    
     
     for event in pygame.event.get():

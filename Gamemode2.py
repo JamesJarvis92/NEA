@@ -1,5 +1,6 @@
 import pygame
 from Wilsons import *
+import time
 
 pygame.init()
 swidth = 720
@@ -14,7 +15,7 @@ BLUE = ((0,0,255))
 RED = (255, 0, 0)
 GRAY = (192, 192, 192)
 
-#screen = pygame.display.set_mode([720,720])
+screen = pygame.display.set_mode([720,720])
 
 def draw_maze(screen, maze):
     for y in range(mheight):
@@ -80,5 +81,18 @@ def gamemode2(screen):
             winner = 2
             running = False
         pygame.display.flip()
-    return winner
+        
+    ## shows winner
+    win_text = "Winner is player " + str(winner)
+    font = pygame.font.Font("freesansbold.ttf", 50)
+    text = font.render(win_text,True,WHITE)
+    screen.blit(text,(200,300))
+    pygame.display.flip()    
+    time.sleep(1)
 #print(gamemode2(screen))
+
+
+
+    
+
+    
