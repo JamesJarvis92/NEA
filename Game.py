@@ -75,21 +75,25 @@ run = True
 while run:
     screen.fill("light blue")
     timer.tick(fps)
-    button1 = Button("Normal Mode",[300,100],RED,ORANGE,BLACK)
+    button1 = Button("Normal Mode",[300,100],RED,ORANGE,BLACK)    ## G1     ### add buttons to array so code is pretty
     button1.hovering()
     button1.draw()
-    button2 = Button("2-Player Mode",[300,200],RED,ORANGE,BLACK)
+    button2 = Button("2-Player Mode",[300,200],RED,ORANGE,BLACK)    ## G2
     button2.hovering()
     button2.draw()
+    qbutton = Button("QUIT", [300,500],RED,ORANGE,BLACK)     ## quit button
+    qbutton.hovering()
+    qbutton.draw()
     pygame.display.flip()
-    if button1.check_clicked():
+    if button1.check_clicked():   ### add time to complete and leaderboard,   countdown to start using while loop and sleep(1000)
         gamemode1(screen)
-    if button2.check_clicked():
+    if button2.check_clicked():   ### add winner screen
         winner = gamemode2(screen)
         print(winner)
+   
     
     for event in pygame.event.get():
-        if event.type == pygame.QUIT:
+        if event.type == pygame.QUIT or qbutton.check_clicked():  ## checks to close program
             run = False
     
     pygame.display.flip()
