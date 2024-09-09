@@ -8,7 +8,7 @@
 
 from Gamemode1 import *
 from Gamemode2 import *
-
+from Gamemode3 import *
 
 WHITE = ((255,255,255))
 BLUE = ((0,0,255))
@@ -81,15 +81,20 @@ while run:
     button2 = Button("2-Player Mode",[300,200],RED,ORANGE,BLACK)    ## G2
     button2.hovering()
     button2.draw()
+    button3 = Button("Dark Mode",[300,300],RED,ORANGE,BLACK)    ## G2
+    button3.hovering()
+    button3.draw()
     qbutton = Button("QUIT", [300,500],RED,ORANGE,BLACK)     ## quit button
     qbutton.hovering()
     qbutton.draw()
+    
     pygame.display.flip()
     if button1.check_clicked():   ### add time to complete and leaderboard,   countdown to start using while loop and sleep(1000)
         gamemode1(screen)
     if button2.check_clicked():   ### add winner screen
         gamemode2(screen)
-        
+    if button3.check_clicked():
+        gamemode3(screen)
         
    
     
