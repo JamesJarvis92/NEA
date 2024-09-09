@@ -1,3 +1,4 @@
+from urllib.request import ProxyDigestAuthHandler
 import pygame
 from Wilsons import *
 
@@ -36,9 +37,17 @@ class Player:
     def draw(self, screen):
         pygame.draw.rect(screen, GREEN, (self.x * square_size, self.y * square_size, square_size, square_size))  ##  draws player
         
-
+def load_screen(screen):
+    screen.fill(WHITE)
+    font = pygame.font.Font("freesansbold.ttf", 50)
+    text = font.render("LOADING...",True,BLACK)
+    screen.blit(text,(200,300))
+    pygame.display.flip()
+    
+screen = pygame.display.set_mode((swidth, sheight))
 def gamemode1(screen):
-    #screen = pygame.display.set_mode((swidth, sheight))  ## initialises screen
+    screen = pygame.display.set_mode((swidth, sheight))  ## initialises screen
+    load_screen(screen)
     maze = WilsonsMazeGen(30) ## need to check maze is solvable with exit
     player = Player()
     running = True
@@ -63,6 +72,8 @@ def gamemode1(screen):
             won = True
             running = False
         pygame.display.flip()
+        
+        
     #screen.fill(WHITE)
     
     #pygame.display.flip()

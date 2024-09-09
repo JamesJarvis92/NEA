@@ -31,7 +31,7 @@ def conv_maze(zone_size,maze,player_pos):
         line = []
         for j in range(len(maze[i])): ## column
             if maze[i][j] == "1":
-                manh_dist = abs(player_pos[0]-j) + abs(player_pos[1]-i)
+                manh_dist = abs(player_pos[0]-j) + abs(player_pos[1]-i)  ## could change to pythagoras
                 if manh_dist>zone_size:
                    line.append("0")
                 else:
@@ -72,9 +72,18 @@ class Player:
     def draw(self, screen):
         pygame.draw.rect(screen, GREEN, (self.x * square_size, self.y * square_size, square_size, square_size))  ##  draws player
         
+def load_screen(screen):
+    screen.fill(WHITE)
+    font = pygame.font.Font("freesansbold.ttf", 50)
+    text = font.render("LOADING...",True,BLACK)
+    screen.blit(text,(200,300))
+    pygame.display.flip()
+
+
 
 def gamemode3(screen):
     #screen = pygame.display.set_mode((swidth, sheight))  ## initialises screen
+    load_screen(screen)
     maze = WilsonsMazeGen(30) ## need to check maze is solvable with exit
     player = Player()
     running = True
@@ -101,6 +110,6 @@ def gamemode3(screen):
             running = False
         pygame.display.flip()
         
-screen = pygame.display.set_mode((swidth, sheight))
+#screen = pygame.display.set_mode((swidth, sheight))
 
-gamemode3(screen)
+#gamemode3(screen)

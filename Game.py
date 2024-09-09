@@ -89,7 +89,7 @@ while run:
     qbutton.draw()
     
     pygame.display.flip()
-    if button1.check_clicked():   ### add time to complete and leaderboard,   countdown to start using while loop and sleep(1000)
+    if button1.check_clicked():   ### add time to complete and leaderboard,   countdown to start using while loop and sleep(1)
         gamemode1(screen)
     if button2.check_clicked():   ### add winner screen
         gamemode2(screen)

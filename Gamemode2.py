@@ -41,9 +41,18 @@ class Player:
     def draw(self, screen):
         pygame.draw.rect(screen, self.color, (self.x * square_size, self.y * square_size, square_size, square_size))  ##  draws player
         
+def load_screen(screen):
+    screen.fill(WHITE)
+    font = pygame.font.Font("freesansbold.ttf", 50)
+    text = font.render("LOADING...",True,BLACK)
+    screen.blit(text,(200,300))
+    pygame.display.flip()
+    
+
 
 def gamemode2(screen):
     #screen = pygame.display.set_mode((swidth, sheight))  ## initialises screen
+    load_screen(screen)
     maze = WilsonsMazeGen(30) ## need to check maze is solvable with exit
     player1 = Player(GREEN)
     player2 = Player(BLUE)
