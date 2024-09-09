@@ -18,12 +18,6 @@ GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 GRAY = (192, 192, 192)
 
-maze = ["111111",
-        "111111",
-        "111100",
-        "111101",
-        "111111",
-        "111111"]
 
 def conv_maze(zone_size,maze,player_pos):
     new_maze = []
@@ -102,7 +96,7 @@ def gamemode3(screen):
                 elif event.key == pygame.K_RIGHT:
                     player.move(1, 0, maze)
         screen.fill(WHITE)     ## when finished
-        zoned_maze = conv_maze(10,maze,[player.x,player.y])
+        zoned_maze = conv_maze(10,maze,[player.x,player.y])  ## change zone size
         draw_maze(screen, zoned_maze)  ## draws maze
         player.draw(screen)
         if maze[player.y][player.x] == "2":  ## checks if player has reached goal
