@@ -1,15 +1,10 @@
-## use manhattan distance for zone 
 import pygame
-from Wilsons import *
+import time 
 
-def pprint(maze):
-    for i in range(len(maze)):
-        print(maze[i])
-        
 pygame.init()
 swidth = 720
 sheight = 720   ## change cell size based on size of mazes
-square_size = 24 ## need to calculate this based on maze size or just have set sizes for game modes
+square_size = 90 ## need to calculate this based on maze size or just have set sizes for game modes
 mwidth = swidth // square_size
 mheight = sheight // square_size 
 WHITE = (255, 255, 255)
@@ -17,37 +12,6 @@ BLACK = (0, 0, 0)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 GRAY = (192, 192, 192)
-
-maze = ["111111",
-        "111111",
-        "111100",
-        "111101",
-        "111111",
-        "111111"]
-
-def conv_maze(zone_size,maze,player_pos):   ## changes maze to zone around player
-    new_maze = []
-    for i in range(len(maze)):  ## row
-        line = []
-        for j in range(len(maze[i])): ## column
-            if maze[i][j] == "1":
-                manh_dist = abs(player_pos[0]-j) + abs(player_pos[1]-i)  ## could change to pythagoras
-                if manh_dist>zone_size:
-                   line.append("0")
-                else:
-                    line.append("1")
-            elif maze[i][j] == "0":
-                line.append("0")
-            else:
-                line.append("2")    ## exit
-        new_maze.append("".join(line))  
-    return new_maze
-
-
-    
-
-
-
 
 def draw_maze(screen, maze):
     for y in range(mheight):
@@ -58,11 +22,11 @@ def draw_maze(screen, maze):
                 pygame.draw.rect(screen, RED, (x * square_size, y * square_size, square_size, square_size)) ## draws walls
 
 
-
 class Player:
-    def __init__(self):
-        self.x = 0
-        self.y = 0
+    def __init__(self,color,pos):
+        self.color = color
+        self.x = pos[1]
+        self.y = pos[0]
     def move(self, dx, dy, maze):
         new_x = self.x + dx
         new_y = self.y + dy
@@ -70,7 +34,8 @@ class Player:
             self.x = new_x    ## assigns new position
             self.y = new_y
     def draw(self, screen):
-        pygame.draw.rect(screen, GREEN, (self.x * square_size, self.y * square_size, square_size, square_size))  ##  draws player
+        pygame.draw.rect(screen, self.color, (self.x * square_size, self.y * square_size, square_size, square_size))  ##  draws player
+        
         
 def load_screen(screen):
     screen.fill(WHITE)
@@ -78,17 +43,30 @@ def load_screen(screen):
     text = font.render("LOADING...",True,BLACK)
     screen.blit(text,(200,300))
     pygame.display.flip()
+    
+screen = pygame.display.set_mode((swidth, sheight))
 
+maze = ["10000010",
+        "10111010",
+        "10001010",
+        "11111110",
+        "10010010",
+        "11111010",
+        "10000010",
+        "11002110"]
 
+enemy_moves = [[0,1],[0,1],[0,1],[0,1],[0,1],[0,1]] ## use queue for moves and then dequeue front
 
-def gamemode3(screen):
-    #screen = pygame.display.set_mode((swidth, sheight))  ## initialises screen
+def gamemode1(screen,maze,enemy_moves):
+    screen = pygame.display.set_mode((swidth, sheight))  ## initialises screen
     load_screen(screen)
-    maze = WilsonsMazeGen(30) ## need to check maze is solvable with exit
-    player = Player()
+    #maze = WilsonsMazeGen(30) ## need to check maze is solvable with exit
+    player = Player(GREEN,[0,0])
+    enemy1 = Player(GRAY,[0,6])
     running = True
     won = False
     while running:
+        emove = 0
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -101,15 +79,22 @@ def gamemode3(screen):
                     player.move(-1, 0, maze)
                 elif event.key == pygame.K_RIGHT:
                     player.move(1, 0, maze)
+        if len(enemy_moves)>0:
+            enemymove = enemy_moves[emove]
+            enemy1.move(enemymove[0],enemymove[1], maze)
+            enemy_moves.pop(0)
+            time.sleep(1)     ## need to find another method of waiting
+       
         screen.fill(WHITE)     ## when finished
-        zoned_maze = conv_maze(10,maze,[player.x,player.y])
-        draw_maze(screen, zoned_maze)  ## draws maze
+        draw_maze(screen, maze)  ## draws maze
         player.draw(screen)
+        enemy1.draw(screen)
         if maze[player.y][player.x] == "2":  ## checks if player has reached goal
             won = True
             running = False
         pygame.display.flip()
         
-#screen = pygame.display.set_mode((swidth, sheight))
-
-#gamemode3(screen)
+        
+   
+    
+gamemode1(screen,maze,enemy_moves)   

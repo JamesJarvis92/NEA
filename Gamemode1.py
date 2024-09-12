@@ -1,4 +1,3 @@
-from urllib.request import ProxyDigestAuthHandler
 import pygame
 from Wilsons import *
 
@@ -74,13 +73,7 @@ def gamemode1(screen):
         pygame.display.flip()
         
         
-    #screen.fill(WHITE)
-    
-    #pygame.display.flip()
-    #pygame.time.wait(100) ## time end screen stays
-    #pygame.quit()
+   
     
 #gamemode1(screen)   
 
-#if __name__ == "__main__":
-#    main()

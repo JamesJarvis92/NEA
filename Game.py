@@ -57,20 +57,9 @@ fps = 60
 timer = pygame.time.Clock()
 main_menu = True
 font = pygame.font.Font("freesansbold.ttf", 24)
-"""
-def draw_menu():
-    button = Button("Normal Mode",[300,100],RED,ORANGE,BLACK)
-    button.hovering()
-    button.draw()
-    return button.check_clicked()
 
-def draw_game():
-    button = Button("menu",[350,350],RED,ORANGE,BLACK)
-    button.draw()
-    button.hovering()
-    button.draw()
-    return button.check_clicked()
-"""
+
+
 run = True
 while run:
     screen.fill("light blue")
@@ -81,7 +70,7 @@ while run:
     button2 = Button("2-Player Mode",[300,200],RED,ORANGE,BLACK)    ## G2
     button2.hovering()
     button2.draw()
-    button3 = Button("Dark Mode",[300,300],RED,ORANGE,BLACK)    ## G2
+    button3 = Button("Dark Mode",[300,300],RED,ORANGE,BLACK)    ## G3
     button3.hovering()
     button3.draw()
     qbutton = Button("QUIT", [300,500],RED,ORANGE,BLACK)     ## quit button
@@ -89,7 +78,7 @@ while run:
     qbutton.draw()
     
     pygame.display.flip()
-    if button1.check_clicked():   ### add time to complete and leaderboard,   countdown to start using while loop and sleep(1)
+    if button1.check_clicked():   ### add time to complete (make maze with missing corner to have timer) and leaderboard,   countdown to start using while loop and sleep(1)
         gamemode1(screen)
     if button2.check_clicked():   ### add winner screen
         gamemode2(screen)
