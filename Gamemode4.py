@@ -1,10 +1,11 @@
 import pygame
 import time 
-
+import random
+from Wilsons import *
 pygame.init()
 swidth = 720
 sheight = 720   ## change cell size based on size of mazes
-square_size = 90 ## need to calculate this based on maze size or just have set sizes for game modes
+square_size = 24 ## need to calculate this based on maze size or just have set sizes for game modes
 mwidth = swidth // square_size
 mheight = sheight // square_size 
 WHITE = (255, 255, 255)
@@ -33,6 +34,10 @@ class Player:
         if 0 <= new_x < mwidth and 0 <= new_y < mheight and maze[new_y][new_x] != "0":  ## checks square trying to move to is valid
             self.x = new_x    ## assigns new position
             self.y = new_y
+            return True
+        else:
+            return False
+
     def draw(self, screen):
         pygame.draw.rect(screen, self.color, (self.x * square_size, self.y * square_size, square_size, square_size))  ##  draws player
         
@@ -55,14 +60,14 @@ maze = ["10000010",
         "10000010",
         "11002110"]
 
-enemy_moves = [[0,1],[0,1],[0,1],[0,1],[0,1],[0,1]] ## use queue for moves and then dequeue front
+enemy_moves = [[0,1],[0,-1],[1,0],[-1,0]] ## use queue for moves and then dequeue front
 
-def gamemode1(screen,maze,enemy_moves):
+def gamemode1(screen):
     screen = pygame.display.set_mode((swidth, sheight))  ## initialises screen
     load_screen(screen)
-    #maze = WilsonsMazeGen(30) ## need to check maze is solvable with exit
+    maze = WilsonsMazeGen(30) ## need to check maze is solvable with exit
     player = Player(GREEN,[0,0])
-    enemy1 = Player(GRAY,[0,6])
+    enemy1 = Player(GRAY,[0,25])
     running = True
     won = False
     timer = pygame.time.Clock()
@@ -70,7 +75,7 @@ def gamemode1(screen,maze,enemy_moves):
     while running:
         emove = 0
         ms += timer.get_time()  ## add time since last tick to ms
-        print(ms)
+        #print(ms)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -83,10 +88,25 @@ def gamemode1(screen,maze,enemy_moves):
                     player.move(-1, 0, maze)
                 elif event.key == pygame.K_RIGHT:
                     player.move(1, 0, maze)
-        if len(enemy_moves)>0 and ms>1000:   ## checks how many milliseconds since last call
-            enemymove = enemy_moves[emove]
-            enemy1.move(enemymove[0],enemymove[1], maze)
-            enemy_moves.pop(0)
+        if ms>500:   ## checks how many milliseconds since last call
+            prev_move = "x"
+            moved = False
+            enemy_moves = [[0,1],[0,-1],[1,0],[-1,0],"x"]    ### stop enemy backtracking as much
+            enemy_moves.remove(prev_move)
+            while moved == False:
+                enemymove = random.choice(enemy_moves)
+                move_index = enemy_moves.index(enemymove)
+                prev_move = enemy_moves[move_index]
+                if enemy1.move(enemymove[0],enemymove[1], maze) == True:
+                    moved = True
+                try:    
+                    enemy_moves.remove(prev_move)
+                    print("hello")
+                except:
+                    print("bye")
+                    pass
+                
+            
             ms = 0  ## resets time between enemy moves
         timer.tick()  ## increases timer
         screen.fill(WHITE)     ## when finished
@@ -101,4 +121,4 @@ def gamemode1(screen,maze,enemy_moves):
         
    
     
-gamemode1(screen,maze,enemy_moves)   
+gamemode1(screen)   
