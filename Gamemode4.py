@@ -65,8 +65,12 @@ def gamemode1(screen,maze,enemy_moves):
     enemy1 = Player(GRAY,[0,6])
     running = True
     won = False
+    timer = pygame.time.Clock()
+    ms = 0
     while running:
         emove = 0
+        ms += timer.get_time()  ## add time since last tick to ms
+        print(ms)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -79,12 +83,12 @@ def gamemode1(screen,maze,enemy_moves):
                     player.move(-1, 0, maze)
                 elif event.key == pygame.K_RIGHT:
                     player.move(1, 0, maze)
-        if len(enemy_moves)>0:
+        if len(enemy_moves)>0 and ms>1000:   ## checks how many milliseconds since last call
             enemymove = enemy_moves[emove]
             enemy1.move(enemymove[0],enemymove[1], maze)
             enemy_moves.pop(0)
-            time.sleep(1)     ## need to find another method of waiting
-       
+            ms = 0  ## resets time between enemy moves
+        timer.tick()  ## increases timer
         screen.fill(WHITE)     ## when finished
         draw_maze(screen, maze)  ## draws maze
         player.draw(screen)
