@@ -35,7 +35,7 @@ class Stack:
       return False
       
   def seestack(self):   ## returns stack
-    return self.stack[0:self.top+1]
+    return self.stack
   
   def peek(self):    ## look at top element of stack
     return self.stack[self.top]

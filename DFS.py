@@ -7,7 +7,7 @@ maze = ["10000010",
         "10010010",
         "11111010",
         "10000010",
-        "11001110"]
+        "11002110"]
 
 def find_move(maze,pos):
     try:
@@ -16,12 +16,12 @@ def find_move(maze,pos):
     except:
         pass
     try:
-        if maze[pos[0]][pos[1]-1] == "1": ## check left
+        if maze[pos[0]][pos[1]-1] == "1" and (pos[1]-1)>=0: ## check left
             return [pos[0],(pos[1]-1)]
     except:
         pass
     try:
-        if maze[pos[0]-1][pos[1]] == "1": ## check up
+        if maze[pos[0]-1][pos[1]] == "1" and (pos[0]-1)>=0: ## check up
             return [(pos[0]-1),pos[1]]
     except:
         pass
@@ -66,8 +66,14 @@ def add_x(maze,pos):
         pass
     return maze
 #print(add_x(maze,[0,0]))
-    
+        
+def find_end(maze):
+    for i in range(len(maze)):
+        row = list(maze[i])
+        if "2" in row:
+            return [i,row.index("2")]
 
+#print(find_end(maze))
 #print(connected_to_end(maze,[7,5]))
 def dfs(maze,start,end):
     path = Stack(500)
@@ -86,9 +92,30 @@ def dfs(maze,start,end):
             maze = add_x(maze,next_move)   ## shows cell as visited
         if connected_to_end(maze,next_move):
             path.push(end)
-            return path.seestack()    ## returns path when end = "2"
+            x =  path.seestack() ## return path when connected without hashtags
+            len_of_path = x.index("#")
+            return x[:len_of_path]
+                ## returns path when end = "2"
             
 
     return False    ## returns when no path
           
-print(dfs(maze,[0,0],[7,4]))
+#print(dfs(maze,[0,0],[7,4]))
+
+def conv_to_moves(moves):
+    steps = []
+    for i in range(len(moves)):
+        try:
+            ych = moves[i+1][0] - moves[i][0]
+        except:
+            pass
+        try:
+            xch = moves[i+1][1] - moves[i][1]
+        except:
+            pass
+        steps.append([ych,xch])
+    return steps
+
+#x = dfs(maze,[0,0],[7,4])
+#print(x)
+#print(conv_to_moves(x))

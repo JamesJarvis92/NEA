@@ -2,6 +2,7 @@ import pygame
 import time 
 import random
 from Wilsons import *
+from DFS import *
 pygame.init()
 swidth = 720
 sheight = 720   ## change cell size based on size of mazes
@@ -62,12 +63,18 @@ maze = ["10000010",
 
 enemy_moves = [[0,1],[0,-1],[1,0],[-1,0]] ## use queue for moves and then dequeue front
 
-def gamemode1(screen):
+def gamemode4(screen):
     screen = pygame.display.set_mode((swidth, sheight))  ## initialises screen
     load_screen(screen)
     maze = WilsonsMazeGen(30) ## need to check maze is solvable with exit
+    #print(maze)
+    end = find_end(maze)
+    enemy_moves = dfs(maze,[0,0],end)
+    #print(enemy_moves)
+    esteps = conv_to_moves(enemy_moves)
+    print(esteps)
     player = Player(GREEN,[0,0])
-    enemy1 = Player(GRAY,[0,25])
+    enemy1 = Player(GRAY,[0,0])
     running = True
     won = False
     timer = pygame.time.Clock()
@@ -89,25 +96,13 @@ def gamemode1(screen):
                 elif event.key == pygame.K_RIGHT:
                     player.move(1, 0, maze)
         if ms>500:   ## checks how many milliseconds since last call
-            prev_move = "x"
-            moved = False
-            enemy_moves = [[0,1],[0,-1],[1,0],[-1,0],"x"]    ### stop enemy backtracking as much
-            enemy_moves.remove(prev_move)
-            while moved == False:
-                enemymove = random.choice(enemy_moves)
-                move_index = enemy_moves.index(enemymove)
-                prev_move = enemy_moves[move_index]
-                if enemy1.move(enemymove[0],enemymove[1], maze) == True:
-                    moved = True
-                try:    
-                    enemy_moves.remove(prev_move)
-                    print("hello")
-                except:
-                    print("bye")
-                    pass
-                
+            print("x")
+            step = esteps[0]
+            enemy1.move(step[1],step[0],maze)
+            esteps.pop()
             
             ms = 0  ## resets time between enemy moves
+            
         timer.tick()  ## increases timer
         screen.fill(WHITE)     ## when finished
         draw_maze(screen, maze)  ## draws maze
@@ -121,4 +116,4 @@ def gamemode1(screen):
         
    
     
-gamemode1(screen)   
+gamemode4(screen)   
