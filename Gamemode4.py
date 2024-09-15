@@ -22,6 +22,8 @@ def draw_maze(screen, maze):
                 pygame.draw.rect(screen, BLACK, (x * square_size, y * square_size, square_size, square_size))  ## draws path
             elif maze[y][x] == "1":
                 pygame.draw.rect(screen, RED, (x * square_size, y * square_size, square_size, square_size)) ## draws walls
+            elif maze[y][x] == "x":
+                pygame.draw.rect(screen, RED, (x * square_size, y * square_size, square_size, square_size))
 
 
 class Player:
@@ -61,7 +63,7 @@ maze = ["10000010",
         "10000010",
         "11002110"]
 
-enemy_moves = [[0,1],[0,-1],[1,0],[-1,0]] ## use queue for moves and then dequeue front
+
 
 def gamemode4(screen):
     screen = pygame.display.set_mode((swidth, sheight))  ## initialises screen
@@ -72,13 +74,14 @@ def gamemode4(screen):
     enemy_moves = dfs(maze,[0,0],end)
     #print(enemy_moves)
     esteps = conv_to_moves(enemy_moves)
-    print(esteps)
+    #print(esteps)
     player = Player(GREEN,[0,0])
     enemy1 = Player(GRAY,[0,0])
     running = True
     won = False
     timer = pygame.time.Clock()
     ms = 0
+    esteps.pop(-1)
     while running:
         emove = 0
         ms += timer.get_time()  ## add time since last tick to ms
@@ -95,11 +98,10 @@ def gamemode4(screen):
                     player.move(-1, 0, maze)
                 elif event.key == pygame.K_RIGHT:
                     player.move(1, 0, maze)
-        if ms>500:   ## checks how many milliseconds since last call
-            print("x")
+        if ms>200:   ## checks how many milliseconds since last call
             step = esteps[0]
             enemy1.move(step[1],step[0],maze)
-            esteps.pop()
+            esteps.pop(0)
             
             ms = 0  ## resets time between enemy moves
             
@@ -116,4 +118,4 @@ def gamemode4(screen):
         
    
     
-gamemode4(screen)   
+#gamemode4(screen)   
