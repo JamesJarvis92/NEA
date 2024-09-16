@@ -65,19 +65,19 @@ run = True
 while run:
     screen.fill("light blue")
     timer.tick(fps)
-    button1 = Button("Normal Mode",[300,100],RED,ORANGE,BLACK)    ## G1     ### add buttons to array so code is pretty
+    button1 = Button("Normal Mode",[230,100],RED,ORANGE,BLACK)    ## G1     ### add buttons to array so code is pretty
     button1.hovering()
     button1.draw()
-    button2 = Button("2-Player Mode",[300,200],RED,ORANGE,BLACK)    ## G2
+    button2 = Button("Race mode",[230,200],RED,ORANGE,BLACK)    ## G2
     button2.hovering()
     button2.draw()
-    button3 = Button("Dark Mode",[300,300],RED,ORANGE,BLACK)    ## G3
+    button3 = Button("Dark Mode",[230,300],RED,ORANGE,BLACK)    ## G3
     button3.hovering()
     button3.draw()
-    button4 = Button("Race Computer",[300,400],RED,ORANGE,BLACK)    ## G3
+    button4 = Button("Escape enemies",[230,400],RED,ORANGE,BLACK)    ## G3
     button4.hovering()
     button4.draw()
-    qbutton = Button("QUIT", [300,500],RED,ORANGE,BLACK)     ## quit button
+    qbutton = Button("QUIT", [230,500],RED,ORANGE,BLACK)     ## quit button
     qbutton.hovering()
     qbutton.draw()
     

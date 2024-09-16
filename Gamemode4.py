@@ -64,6 +64,10 @@ maze = ["10000010",
         "11002110"]
 
 
+def pprint(maze):
+    for i in range(len(maze)):
+        print(maze[i])
+
 
 def gamemode4(screen):
     lost = False
@@ -80,45 +84,72 @@ def gamemode4(screen):
             pygame.display.flip()
             rounds.pop(0)
             maze = WilsonsMazeGen(30) ## need to check maze is solvable with exit
+            maze1 = maze
             t.sleep(1)
             end = find_end(maze)
-            enemy_moves = dfs(maze,[0,0],end)
-            #print(enemy_moves)
-            esteps = conv_to_moves(enemy_moves)
             #print(esteps)
             player = Player(GREEN,[0,0])
-            enemy1 = Player(GRAY,[0,0])
+            enemy1 = Player(GRAY,[0,25])    ### make function to place enemy
+            enemy_moves = dfs(maze1,[enemy1.y,enemy1.x],[player.y,player.x])
+            print(enemy_moves)
+            #print(enemy_moves)
+            esteps = conv_to_moves(enemy_moves)
+            print("x")
             running = True
             won = False
             timer = pygame.time.Clock()
-            ms = 0
-            esteps.pop(-1)
+            t1 = 0
+            t2 = 0
+            #esteps.pop(-1)
+            moved = False
             while running:
                 emove = 0
-                ms += timer.get_time()  ## add time since last tick to ms
-                #print(ms)
+                t1 += timer.get_time()  ## add time since last tick to ms
+                t2 += timer.get_time()
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         running = False
                     elif event.type == pygame.KEYDOWN:    ## does movements 
                         if event.key == pygame.K_UP:
                             player.move(0, -1, maze)
+                            moved = True
                         elif event.key == pygame.K_DOWN:
                             player.move(0, 1, maze)
+                            moved = True
                         elif event.key == pygame.K_LEFT:
                             player.move(-1, 0, maze)
+                            moved = True
                         elif event.key == pygame.K_RIGHT:
                             player.move(1, 0, maze)
-                if ms>time:   ## checks how many milliseconds since last call
+                            moved = True
+                if t1>500:   ## checks how many milliseconds since last call
                     try:
                         step = esteps[0]
                         enemy1.move(step[1],step[0],maze)
                         esteps.pop(0)
             
-                        ms = 0  ## resets time between enemy moves
+                        t1 = 0  ## resets time between enemy moves
                     except:
                         lost = True
                         running = False
+                if t2>1000:
+                    if moved:
+                        pprint(maze)
+                        pprint(maze1)
+                        maze1 = maze    ## write function to change x back to 1
+                        print(t2)
+                        ppos = [player.y,player.x]
+                        epos = [enemy1.y,enemy1.x]
+                        print(ppos,epos)
+                        enemy_moves = dfs(maze1,epos,ppos)
+                        print(enemy_moves)
+                        esteps = conv_to_moves(enemy_moves)
+                        moved = False
+                    #print("y")
+                    #print("x")
+                    t2 = 0
+                    
+            
                 timer.tick()  ## increases timer
                 screen.fill(WHITE)     ## when finished
                 draw_maze(screen, maze)  ## draws maze
@@ -147,5 +178,4 @@ def gamemode4(screen):
                 pygame.display.flip()
        
    
-    
-#gamemode4(screen)   
+gamemode4(screen)   

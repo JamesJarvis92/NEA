@@ -76,21 +76,22 @@ def find_end(maze):
 #print(find_end(maze))
 #print(connected_to_end(maze,[7,5]))
 def dfs(maze,start,end):
+    nmaze = maze
     path = Stack(500)
     path.push(start)
     path_found = False
-    maze = add_x(maze,path.peek())
+    nmaze = add_x(nmaze,path.peek())
     while path_found == False and path.isEmpty() == False:
         if path.peek() == end:
             path_found = True
             return path.seestack()    ## returns path when end = "1"
-        next_move = find_move(maze,path.peek())    ## push next move unless no move then pop until there is a move
+        next_move = find_move(nmaze,path.peek())    ## push next move unless no move then pop until there is a move
         if next_move == False:   ## if no move backtracks until there is an available move
             path.spop()
         else:
             path.push(next_move)
-            maze = add_x(maze,next_move)   ## shows cell as visited
-        if connected_to_end(maze,next_move):
+            nmaze = add_x(nmaze,next_move)   ## shows cell as visited
+        if connected_to_end(nmaze,next_move):
             path.push(end)
             x =  path.seestack() ## return path when connected without hashtags
             len_of_path = x.index("#")

@@ -146,8 +146,11 @@ def computer_race(screen):
     lost = False
     times = [500,400,300,250,200]
     rounds = ["1","2","3","4","5"]
+    end = False
     screen = pygame.display.set_mode((swidth, sheight))  ## initialises screen
     for time in times:
+        if end == True:
+            break
         if lost == False:
             screen.fill(WHITE)
             font1 = pygame.font.Font("freesansbold.ttf", 50)
@@ -188,6 +191,7 @@ def computer_race(screen):
                             player.move(1, 0, maze)
                         elif event.key == pygame.K_ESCAPE:
                             running = False
+                            end = True
                 if ms>time:   ## checks how many milliseconds since last call
                     try:
                         step = esteps[0]
@@ -232,13 +236,13 @@ def gamemode2(screen):
     run = True
     while run:
         screen.fill("light blue")
-        buttona = Button("Race computer",[100,100],RED,ORANGE,BLACK)    
+        buttona = Button("Race computer",[230,150],RED,ORANGE,BLACK)    
         buttona.hovering()
         buttona.draw()
-        buttonb = Button("2-Player Mode",[100,200],RED,ORANGE,BLACK)    
+        buttonb = Button("2-Player Mode",[230,250],RED,ORANGE,BLACK)    
         buttonb.hovering()
         buttonb.draw()
-        bbutton = Button("Back", [300,500],RED,ORANGE,BLACK)     ## quit button
+        bbutton = Button("Back", [230,550],RED,ORANGE,BLACK)     ## quit button
         bbutton.hovering()
         bbutton.draw()
         pygame.display.flip()
