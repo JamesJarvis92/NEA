@@ -104,10 +104,8 @@ def gamemode4(screen):
             while True:
                 try:
                     maze = WilsonsMazeGen(30) ## need to check maze is solvable with exit
-                    #maze1 = maze
                     t.sleep(1)
                     end = find_end(maze)
-                    #print(esteps)
                     estart = find_enemy_start(maze)
                     player = Player(GREEN,[0,0])
                     enemy1 = Player(GRAY, estart)    
@@ -116,13 +114,11 @@ def gamemode4(screen):
                     break
                 except:
                     pass
-                #print("x")
             running = True
             won = False
             timer = pygame.time.Clock()
             t1 = 0
             t2 = 0
-            #esteps.pop(-1)
             moved = False
             while running:
                 emove = 0
@@ -178,7 +174,7 @@ def gamemode4(screen):
                     
             
                 timer.tick()  ## increases timer
-                #screen.fill(WHITE)     ## when finished
+                screen.fill(WHITE)     ## when finished
                 try:
                     draw_maze(screen, maze)  ## draws maze
                     player.draw(screen)

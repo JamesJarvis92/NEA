@@ -65,7 +65,7 @@ def add_x(maze,pos):
     except:
         pass
     return maze
-#print(add_x(maze,[0,0]))
+
         
 def find_end(maze):
     for i in range(len(maze)):
@@ -73,8 +73,7 @@ def find_end(maze):
         if "2" in row:
             return [i,row.index("2")]
 
-#print(find_end(maze))
-#print(connected_to_end(maze,[7,5]))
+
 def dfs(maze,start,end):
     nmaze = maze
     path = Stack(500)
@@ -101,7 +100,7 @@ def dfs(maze,start,end):
 
     return False    ## returns when no path
           
-#print(dfs(maze,[0,0],[7,4]))
+
 
 def conv_to_moves(moves):
     steps = []
@@ -117,6 +116,3 @@ def conv_to_moves(moves):
         steps.append([ych,xch])
     return steps
 
-#x = dfs(maze,[0,0],[7,4])
-#print(x)
-#print(conv_to_moves(x))

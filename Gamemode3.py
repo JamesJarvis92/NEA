@@ -76,7 +76,6 @@ def load_screen(screen):
 
 
 def gamemode3(screen):
-    #screen = pygame.display.set_mode((swidth, sheight))  ## initialises screen
     zone_sizes = [10,8,6,4]
     for size in zone_sizes:
         load_screen(screen)

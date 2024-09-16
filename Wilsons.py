@@ -1,5 +1,3 @@
-## may change so end is alr in maze so path is always corner to corner
-
 from stack import *
 from CreateMaze import *
 import random

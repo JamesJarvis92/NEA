@@ -86,13 +86,11 @@ def load_screen(screen):
 
 
 def two_player_mode(screen):
-    #screen = pygame.display.set_mode((swidth, sheight))  ## initialises screen
     load_screen(screen)
     maze = WilsonsMazeGen(30) ## need to check maze is solvable with exit
     player1 = Player(GREEN,[0,0])
     player2 = Player(BLUE,[0,0])
     running = True
-    #won = False
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -163,9 +161,7 @@ def computer_race(screen):
             t.sleep(1)
             end = find_end(maze)
             enemy_moves = dfs(maze,[0,0],end)
-            #print(enemy_moves)
             esteps = conv_to_moves(enemy_moves)
-            #print(esteps)
             player = Player(GREEN,[0,0])
             enemy1 = Player(GRAY,[0,0])
             running = True
@@ -176,7 +172,6 @@ def computer_race(screen):
             while running:
                 emove = 0
                 ms += timer.get_time()  ## add time since last tick to ms
-                #print(ms)
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         running = False
@@ -248,11 +243,8 @@ def gamemode2(screen):
         pygame.display.flip()
         if buttona.check_clicked():   
             computer_race(screen)
-            #run = False
         if buttonb.check_clicked():   
             two_player_mode(screen)
-            #run = False
-        #t.sleep(1)
     
     
         
