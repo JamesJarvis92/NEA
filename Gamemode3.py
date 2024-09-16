@@ -77,34 +77,36 @@ def load_screen(screen):
 
 def gamemode3(screen):
     #screen = pygame.display.set_mode((swidth, sheight))  ## initialises screen
-    load_screen(screen)
-    maze = WilsonsMazeGen(30) ## need to check maze is solvable with exit
-    player = Player()
-    running = True
-    won = False
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-            elif event.type == pygame.KEYDOWN:    ## does movements 
-                if event.key == pygame.K_UP:
-                    player.move(0, -1, maze)
-                elif event.key == pygame.K_DOWN:
-                    player.move(0, 1, maze)
-                elif event.key == pygame.K_LEFT:
-                    player.move(-1, 0, maze)
-                elif event.key == pygame.K_RIGHT:
-                    player.move(1, 0, maze)
-                elif event.key == pygame.K_ESCAPE:
+    zone_sizes = [10,8,6,4]
+    for size in zone_sizes:
+        load_screen(screen)
+        maze = WilsonsMazeGen(30) ## need to check maze is solvable with exit
+        player = Player()
+        running = True
+        won = False
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
                     running = False
-        screen.fill(WHITE)     ## when finished
-        zoned_maze = conv_maze(10,maze,[player.x,player.y])  ## change zone size
-        draw_maze(screen, zoned_maze)  ## draws maze
-        player.draw(screen)
-        if maze[player.y][player.x] == "2":  ## checks if player has reached goal
-            won = True
-            running = False
-        pygame.display.flip()
+                elif event.type == pygame.KEYDOWN:    ## does movements 
+                    if event.key == pygame.K_UP:
+                        player.move(0, -1, maze)
+                    elif event.key == pygame.K_DOWN:
+                        player.move(0, 1, maze)
+                    elif event.key == pygame.K_LEFT:
+                        player.move(-1, 0, maze)
+                    elif event.key == pygame.K_RIGHT:
+                        player.move(1, 0, maze)
+                    elif event.key == pygame.K_ESCAPE:
+                        return None
+            screen.fill(WHITE)     ## when finished
+            zoned_maze = conv_maze(size,maze,[player.x,player.y])  ## change zone size
+            draw_maze(screen, zoned_maze)  ## draws maze
+            player.draw(screen)
+            if maze[player.y][player.x] == "2":  ## checks if player has reached goal
+                won = True
+                running = False
+            pygame.display.flip()
         
 #screen = pygame.display.set_mode((swidth, sheight))
 

@@ -80,8 +80,13 @@ def back_to_org(maze):
                 nrow += "1"
         nmaze.append(nrow)
     return nmaze
-                    
-
+def find_enemy_start(maze):
+    starts = [[0,25],[0,26],[0,27],[0,28],[1,25],[1,26],[1,27],[1,28],[2,25],[2,26],[2,27],[2,28],[25,0],[26,0],[27,0],[28,0],[25,1],[26,1],[27,1],[28,1],[25,2],[26,2],[27,2],[28,2]]
+    while True:
+        start = random.choice(starts)
+        if maze[start[0]][start[1]] == "1":
+            return start
+    
 def gamemode4(screen):
     lost = False
     times = [500,400,300,250,200]
@@ -96,18 +101,22 @@ def gamemode4(screen):
             screen.blit(text,(200,300))
             pygame.display.flip()
             rounds.pop(0)
-            maze = WilsonsMazeGen(30) ## need to check maze is solvable with exit
-            #maze1 = maze
-            t.sleep(1)
-            end = find_end(maze)
-            #print(esteps)
-            player = Player(GREEN,[0,0])
-            enemy1 = Player(GRAY,[0,25])    ### make function to place enemy
-            enemy_moves = dfs(maze,[enemy1.y,enemy1.x],[player.y,player.x])
-            print(enemy_moves)
-            #print(enemy_moves)
-            esteps = conv_to_moves(enemy_moves)
-            #print("x")
+            while True:
+                try:
+                    maze = WilsonsMazeGen(30) ## need to check maze is solvable with exit
+                    #maze1 = maze
+                    t.sleep(1)
+                    end = find_end(maze)
+                    #print(esteps)
+                    estart = find_enemy_start(maze)
+                    player = Player(GREEN,[0,0])
+                    enemy1 = Player(GRAY, estart)    
+                    enemy_moves = dfs(maze,[enemy1.y,enemy1.x],[player.y,player.x])
+                    esteps = conv_to_moves(enemy_moves)
+                    break
+                except:
+                    pass
+                #print("x")
             running = True
             won = False
             timer = pygame.time.Clock()
@@ -135,6 +144,8 @@ def gamemode4(screen):
                         elif event.key == pygame.K_RIGHT:
                             player.move(1, 0, maze)
                             moved = True
+                        elif event.key == pygame.K_ESCAPE:
+                            return None
                 if [player.x,player.y] == [enemy1.x,enemy1.y]:
                     screen.fill(WHITE)
                     font = pygame.font.Font("freesansbold.ttf", 50)
@@ -143,6 +154,7 @@ def gamemode4(screen):
                     pygame.display.flip()
                     t.sleep(1)
                     running = False
+                    return None
                     
                 if t1>time:   ## checks how many milliseconds since last call
                     try:
@@ -166,24 +178,29 @@ def gamemode4(screen):
                     
             
                 timer.tick()  ## increases timer
-                screen.fill(WHITE)     ## when finished
-                draw_maze(screen, maze)  ## draws maze
-                player.draw(screen)
-                enemy1.draw(screen)
-                if maze[player.y][player.x] == "2" and rounds == []:  ## checks if player has reached goal
-                    screen.fill(WHITE)
-                    font = pygame.font.Font("freesansbold.ttf", 50)
-                    text = font.render("You won :)",True,BLACK)
-                    screen.blit(text,(200,300))
-                    pygame.display.flip()
-                    t.sleep(1)
-                    won = True
-                    running = False
-                elif maze[player.y][player.x] == "2":
-                    running = False
+                #screen.fill(WHITE)     ## when finished
+                try:
+                    draw_maze(screen, maze)  ## draws maze
+                    player.draw(screen)
+                    enemy1.draw(screen)
+                    if maze[player.y][player.x] == "2" and rounds == []:  ## checks if player has reached goal
+                        screen.fill(WHITE)
+                        font = pygame.font.Font("freesansbold.ttf", 50)
+                        text = font.render("You won :)",True,BLACK)
+                        screen.blit(text,(200,300))
+                        pygame.display.flip()
+                        t.sleep(1)
+                        won = True
+                        running = False
+                    elif maze[player.y][player.x] == "2":
+                        running = False
                 
                     
-                pygame.display.flip()
+                    pygame.display.flip()
+                
+                except:
+                    pass
+                
        
    
-gamemode4(screen)   
+#gamemode4(screen)   

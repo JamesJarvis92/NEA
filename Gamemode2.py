@@ -115,7 +115,7 @@ def two_player_mode(screen):
                 elif event.key == pygame.K_d:
                     player2.move(1, 0, maze)
                 elif event.key == pygame.K_ESCAPE:
-                    running = False
+                    return None
         screen.fill(WHITE)     ## when finished
         draw_maze(screen, maze)  ## draws maze
         player1.draw(screen)
