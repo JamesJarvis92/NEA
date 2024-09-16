@@ -95,6 +95,8 @@ def gamemode3(screen):
                     player.move(-1, 0, maze)
                 elif event.key == pygame.K_RIGHT:
                     player.move(1, 0, maze)
+                elif event.key == pygame.K_ESCAPE:
+                    running = False
         screen.fill(WHITE)     ## when finished
         zoned_maze = conv_maze(10,maze,[player.x,player.y])  ## change zone size
         draw_maze(screen, zoned_maze)  ## draws maze

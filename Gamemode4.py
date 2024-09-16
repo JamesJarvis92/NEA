@@ -1,5 +1,5 @@
 import pygame
-import time 
+import time as t
 import random
 from Wilsons import *
 from DFS import *
@@ -66,56 +66,86 @@ maze = ["10000010",
 
 
 def gamemode4(screen):
+    lost = False
+    times = [500,400,300,250,200]
+    rounds = ["1","2","3","4","5"]
     screen = pygame.display.set_mode((swidth, sheight))  ## initialises screen
-    load_screen(screen)
-    maze = WilsonsMazeGen(30) ## need to check maze is solvable with exit
-    #print(maze)
-    end = find_end(maze)
-    enemy_moves = dfs(maze,[0,0],end)
-    #print(enemy_moves)
-    esteps = conv_to_moves(enemy_moves)
-    #print(esteps)
-    player = Player(GREEN,[0,0])
-    enemy1 = Player(GRAY,[0,0])
-    running = True
-    won = False
-    timer = pygame.time.Clock()
-    ms = 0
-    esteps.pop(-1)
-    while running:
-        emove = 0
-        ms += timer.get_time()  ## add time since last tick to ms
-        #print(ms)
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-            elif event.type == pygame.KEYDOWN:    ## does movements 
-                if event.key == pygame.K_UP:
-                    player.move(0, -1, maze)
-                elif event.key == pygame.K_DOWN:
-                    player.move(0, 1, maze)
-                elif event.key == pygame.K_LEFT:
-                    player.move(-1, 0, maze)
-                elif event.key == pygame.K_RIGHT:
-                    player.move(1, 0, maze)
-        if ms>200:   ## checks how many milliseconds since last call
-            step = esteps[0]
-            enemy1.move(step[1],step[0],maze)
-            esteps.pop(0)
+    for time in times:
+        if lost == False:
+            screen.fill(WHITE)
+            font = pygame.font.Font("freesansbold.ttf", 50)
+            string = "Round " + rounds[0]
+            text = font.render(string,True,BLACK)
+            screen.blit(text,(200,300))
+            pygame.display.flip()
+            rounds.pop(0)
+            maze = WilsonsMazeGen(30) ## need to check maze is solvable with exit
+            t.sleep(1)
+            end = find_end(maze)
+            enemy_moves = dfs(maze,[0,0],end)
+            #print(enemy_moves)
+            esteps = conv_to_moves(enemy_moves)
+            #print(esteps)
+            player = Player(GREEN,[0,0])
+            enemy1 = Player(GRAY,[0,0])
+            running = True
+            won = False
+            timer = pygame.time.Clock()
+            ms = 0
+            esteps.pop(-1)
+            while running:
+                emove = 0
+                ms += timer.get_time()  ## add time since last tick to ms
+                #print(ms)
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        running = False
+                    elif event.type == pygame.KEYDOWN:    ## does movements 
+                        if event.key == pygame.K_UP:
+                            player.move(0, -1, maze)
+                        elif event.key == pygame.K_DOWN:
+                            player.move(0, 1, maze)
+                        elif event.key == pygame.K_LEFT:
+                            player.move(-1, 0, maze)
+                        elif event.key == pygame.K_RIGHT:
+                            player.move(1, 0, maze)
+                if ms>time:   ## checks how many milliseconds since last call
+                    try:
+                        step = esteps[0]
+                        enemy1.move(step[1],step[0],maze)
+                        esteps.pop(0)
             
-            ms = 0  ## resets time between enemy moves
-            
-        timer.tick()  ## increases timer
-        screen.fill(WHITE)     ## when finished
-        draw_maze(screen, maze)  ## draws maze
-        player.draw(screen)
-        enemy1.draw(screen)
-        if maze[player.y][player.x] == "2":  ## checks if player has reached goal
-            won = True
-            running = False
-        pygame.display.flip()
-        
-        
+                        ms = 0  ## resets time between enemy moves
+                    except:
+                        lost = True
+                        running = False
+                timer.tick()  ## increases timer
+                screen.fill(WHITE)     ## when finished
+                draw_maze(screen, maze)  ## draws maze
+                player.draw(screen)
+                enemy1.draw(screen)
+                if maze[player.y][player.x] == "2" and rounds == []:  ## checks if player has reached goal
+                    screen.fill(WHITE)
+                    font = pygame.font.Font("freesansbold.ttf", 50)
+                    text = font.render("You won :)",True,BLACK)
+                    screen.blit(text,(200,300))
+                    pygame.display.flip()
+                    t.sleep(1)
+                    won = True
+                    running = False
+                elif maze[player.y][player.x] == "2":
+                    running = False
+                if maze[enemy1.y][enemy1.x] == "2":  ## checks if enemy has reached goal
+                    screen.fill(WHITE)
+                    font = pygame.font.Font("freesansbold.ttf", 50)
+                    text = font.render("You lost :(",True,BLACK)
+                    screen.blit(text,(200,300))
+                    pygame.display.flip()
+                    t.sleep(1)
+                    
+                    
+                pygame.display.flip()
+       
    
     
 #gamemode4(screen)   

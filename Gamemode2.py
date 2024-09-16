@@ -1,6 +1,7 @@
 import pygame
 from Wilsons import *
-import time
+from DFS import *
+import time as t
 
 pygame.init()
 swidth = 720
@@ -14,9 +15,37 @@ GREEN = (0, 255, 0)
 BLUE = ((0,0,255))
 RED = (255, 0, 0)
 GRAY = (192, 192, 192)
-
+ORANGE = ((255,100,10))
+font = pygame.font.Font("freesansbold.ttf", 24)
 screen = pygame.display.set_mode([720,720])
 
+class Button:
+    def __init__(self,txt,pos,mcol,ocol,textcol):
+        self.text = txt
+        self.pos = pos
+        self.mcol = mcol
+        self.ocol = ocol
+        self.textcol = textcol
+        self.button = pygame.rect.Rect((self.pos[0],self.pos[1]),(260,40))
+    
+    def draw(self):
+        btn = pygame.draw.rect(screen, self.mcol, self.button,0,5)
+        pygame.draw.rect(screen, self.ocol, self.button,5,5)
+        text = font.render(self.text,True,self.textcol)
+        screen.blit(text,(self.pos[0]+15,self.pos[1]+7))
+        
+    def check_clicked(self):
+        if self.button.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0]:
+            return True
+        else:
+            return False
+        
+    def hovering(self):
+        if (self.button).collidepoint(pygame.mouse.get_pos()):
+            temp = self.mcol
+            self.mcol = self.ocol
+            self.ocol = temp
+        
 def draw_maze(screen, maze):
     for y in range(mheight):
         for x in range(mwidth):
@@ -24,38 +53,44 @@ def draw_maze(screen, maze):
                 pygame.draw.rect(screen, BLACK, (x * square_size, y * square_size, square_size, square_size))  ## draws path
             elif maze[y][x] == "1":
                 pygame.draw.rect(screen, RED, (x * square_size, y * square_size, square_size, square_size)) ## draws walls
+            elif maze[y][x] == "x":
+                pygame.draw.rect(screen, RED, (x * square_size, y * square_size, square_size, square_size))
 
 
 
 class Player:
-    def __init__(self,color):
+    def __init__(self,color,pos):
         self.color = color
-        self.x = 0
-        self.y = 0
+        self.x = pos[1]
+        self.y = pos[0]
     def move(self, dx, dy, maze):
         new_x = self.x + dx
         new_y = self.y + dy
         if 0 <= new_x < mwidth and 0 <= new_y < mheight and maze[new_y][new_x] != "0":  ## checks square trying to move to is valid
             self.x = new_x    ## assigns new position
             self.y = new_y
+            return True
+        else:
+            return False
+
     def draw(self, screen):
         pygame.draw.rect(screen, self.color, (self.x * square_size, self.y * square_size, square_size, square_size))  ##  draws player
         
 def load_screen(screen):
     screen.fill(WHITE)
-    font = pygame.font.Font("freesansbold.ttf", 50)
-    text = font.render("LOADING...",True,BLACK)
+    font1 = pygame.font.Font("freesansbold.ttf", 50)
+    text = font1.render("LOADING...",True,BLACK)
     screen.blit(text,(200,300))
     pygame.display.flip()
     
 
 
-def gamemode2(screen):
+def two_player_mode(screen):
     #screen = pygame.display.set_mode((swidth, sheight))  ## initialises screen
     load_screen(screen)
     maze = WilsonsMazeGen(30) ## need to check maze is solvable with exit
-    player1 = Player(GREEN)
-    player2 = Player(BLUE)
+    player1 = Player(GREEN,[0,0])
+    player2 = Player(BLUE,[0,0])
     running = True
     #won = False
     while running:
@@ -79,6 +114,8 @@ def gamemode2(screen):
                     player2.move(-1, 0, maze)
                 elif event.key == pygame.K_d:
                     player2.move(1, 0, maze)
+                elif event.key == pygame.K_ESCAPE:
+                    running = False
         screen.fill(WHITE)     ## when finished
         draw_maze(screen, maze)  ## draws maze
         player1.draw(screen)
@@ -93,18 +130,134 @@ def gamemode2(screen):
         
     ## shows winner
     try:
+        screen.fill(WHITE)
         win_text = "Winner is player " + str(winner)
-        font = pygame.font.Font("freesansbold.ttf", 50)
-        text = font.render(win_text,True,WHITE)
+        font1 = pygame.font.Font("freesansbold.ttf", 50)
+        text = font1.render(win_text,True,WHITE)
         screen.blit(text,(200,300))
         pygame.display.flip()    
-        time.sleep(1)
+        t.sleep(1)
     except:
         pass
-#print(gamemode2(screen))
+
+
+
+def computer_race(screen):
+    lost = False
+    times = [500,400,300,250,200]
+    rounds = ["1","2","3","4","5"]
+    screen = pygame.display.set_mode((swidth, sheight))  ## initialises screen
+    for time in times:
+        if lost == False:
+            screen.fill(WHITE)
+            font1 = pygame.font.Font("freesansbold.ttf", 50)
+            string = "Round " + rounds[0]
+            text = font1.render(string,True,BLACK)
+            screen.blit(text,(200,300))
+            pygame.display.flip()
+            rounds.pop(0)
+            maze = WilsonsMazeGen(30) ## need to check maze is solvable with exit
+            t.sleep(1)
+            end = find_end(maze)
+            enemy_moves = dfs(maze,[0,0],end)
+            #print(enemy_moves)
+            esteps = conv_to_moves(enemy_moves)
+            #print(esteps)
+            player = Player(GREEN,[0,0])
+            enemy1 = Player(GRAY,[0,0])
+            running = True
+            won = False
+            timer = pygame.time.Clock()
+            ms = 0
+            esteps.pop(-1)
+            while running:
+                emove = 0
+                ms += timer.get_time()  ## add time since last tick to ms
+                #print(ms)
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        running = False
+                    elif event.type == pygame.KEYDOWN:    ## does movements 
+                        if event.key == pygame.K_UP:
+                            player.move(0, -1, maze)
+                        elif event.key == pygame.K_DOWN:
+                            player.move(0, 1, maze)
+                        elif event.key == pygame.K_LEFT:
+                            player.move(-1, 0, maze)
+                        elif event.key == pygame.K_RIGHT:
+                            player.move(1, 0, maze)
+                        elif event.key == pygame.K_ESCAPE:
+                            running = False
+                if ms>time:   ## checks how many milliseconds since last call
+                    try:
+                        step = esteps[0]
+                        enemy1.move(step[1],step[0],maze)
+                        esteps.pop(0)
+            
+                        ms = 0  ## resets time between enemy moves
+                    except:
+                        lost = True
+                        running = False
+                timer.tick()  ## increases timer
+                screen.fill(WHITE)     ## when finished
+                draw_maze(screen, maze)  ## draws maze
+                player.draw(screen)
+                enemy1.draw(screen)
+                if maze[player.y][player.x] == "2" and rounds == []:  ## checks if player has reached goal
+                    screen.fill(WHITE)
+                    font1 = pygame.font.Font("freesansbold.ttf", 50)
+                    text = font1.render("You won :)",True,BLACK)
+                    screen.blit(text,(200,300))
+                    pygame.display.flip()
+                    t.sleep(1)
+                    won = True
+                    running = False
+                elif maze[player.y][player.x] == "2":
+                    running = False
+                if maze[enemy1.y][enemy1.x] == "2":  ## checks if enemy has reached goal
+                    screen.fill(WHITE)
+                    font1 = pygame.font.Font("freesansbold.ttf", 50)
+                    text = font1.render("You lost :(",True,BLACK)
+                    screen.blit(text,(200,300))
+                    pygame.display.flip()
+                    t.sleep(1)
+                    
+                    
+                pygame.display.flip()
 
 
 
     
-
+def gamemode2(screen):
+    run = True
+    while run:
+        screen.fill("light blue")
+        buttona = Button("Race computer",[100,100],RED,ORANGE,BLACK)    
+        buttona.hovering()
+        buttona.draw()
+        buttonb = Button("2-Player Mode",[100,200],RED,ORANGE,BLACK)    
+        buttonb.hovering()
+        buttonb.draw()
+        bbutton = Button("Back", [300,500],RED,ORANGE,BLACK)     ## quit button
+        bbutton.hovering()
+        bbutton.draw()
+        pygame.display.flip()
+        if buttona.check_clicked():   
+            computer_race(screen)
+            #run = False
+        if buttonb.check_clicked():   
+            two_player_mode(screen)
+            #run = False
+        #t.sleep(1)
     
+    
+        
+   
+    
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT or bbutton.check_clicked():  ## checks to close program
+                run = False
+    
+        pygame.display.flip()
+    
+#gamemode2(screen)

@@ -64,6 +64,8 @@ def gamemode1(screen):
                     player.move(-1, 0, maze)
                 elif event.key == pygame.K_RIGHT:
                     player.move(1, 0, maze)
+                elif event.key == pygame.K_ESCAPE:
+                    running = False
         screen.fill(WHITE)     ## when finished
         draw_maze(screen, maze)  ## draws maze
         player.draw(screen)
