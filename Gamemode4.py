@@ -3,6 +3,7 @@ import time as t
 import random
 from Wilsons import *
 from DFS import *
+### make validator for maze and enemy start/ has path
 pygame.init()
 swidth = 720
 sheight = 720   ## change cell size based on size of mazes
@@ -54,8 +55,8 @@ def load_screen(screen):
     
 screen = pygame.display.set_mode((swidth, sheight))
 
-maze = ["10000010",
-        "10111010",
+maze = ["x0000010",
+        "x0111010",
         "10001010",
         "11111110",
         "10010010",
@@ -68,6 +69,18 @@ def pprint(maze):
     for i in range(len(maze)):
         print(maze[i])
 
+def back_to_org(maze):
+    nmaze = []
+    for row in maze:
+        nrow = ""
+        for letter in row:
+            if letter == "0":
+                nrow += "0"
+            else:
+                nrow += "1"
+        nmaze.append(nrow)
+    return nmaze
+                    
 
 def gamemode4(screen):
     lost = False
@@ -84,17 +97,17 @@ def gamemode4(screen):
             pygame.display.flip()
             rounds.pop(0)
             maze = WilsonsMazeGen(30) ## need to check maze is solvable with exit
-            maze1 = maze
+            #maze1 = maze
             t.sleep(1)
             end = find_end(maze)
             #print(esteps)
             player = Player(GREEN,[0,0])
             enemy1 = Player(GRAY,[0,25])    ### make function to place enemy
-            enemy_moves = dfs(maze1,[enemy1.y,enemy1.x],[player.y,player.x])
+            enemy_moves = dfs(maze,[enemy1.y,enemy1.x],[player.y,player.x])
             print(enemy_moves)
             #print(enemy_moves)
             esteps = conv_to_moves(enemy_moves)
-            print("x")
+            #print("x")
             running = True
             won = False
             timer = pygame.time.Clock()
@@ -122,7 +135,16 @@ def gamemode4(screen):
                         elif event.key == pygame.K_RIGHT:
                             player.move(1, 0, maze)
                             moved = True
-                if t1>500:   ## checks how many milliseconds since last call
+                if [player.x,player.y] == [enemy1.x,enemy1.y]:
+                    screen.fill(WHITE)
+                    font = pygame.font.Font("freesansbold.ttf", 50)
+                    text = font.render("You lost :(",True,BLACK)
+                    screen.blit(text,(200,300))
+                    pygame.display.flip()
+                    t.sleep(1)
+                    running = False
+                    
+                if t1>time:   ## checks how many milliseconds since last call
                     try:
                         step = esteps[0]
                         enemy1.move(step[1],step[0],maze)
@@ -134,19 +156,12 @@ def gamemode4(screen):
                         running = False
                 if t2>1000:
                     if moved:
-                        pprint(maze)
-                        pprint(maze1)
-                        maze1 = maze    ## write function to change x back to 1
-                        print(t2)
                         ppos = [player.y,player.x]
                         epos = [enemy1.y,enemy1.x]
-                        print(ppos,epos)
-                        enemy_moves = dfs(maze1,epos,ppos)
-                        print(enemy_moves)
+                        enemy_moves = dfs(back_to_org(maze),epos,ppos)
                         esteps = conv_to_moves(enemy_moves)
                         moved = False
-                    #print("y")
-                    #print("x")
+                    
                     t2 = 0
                     
             
@@ -166,14 +181,7 @@ def gamemode4(screen):
                     running = False
                 elif maze[player.y][player.x] == "2":
                     running = False
-                if maze[enemy1.y][enemy1.x] == "2":  ## checks if enemy has reached goal
-                    screen.fill(WHITE)
-                    font = pygame.font.Font("freesansbold.ttf", 50)
-                    text = font.render("You lost :(",True,BLACK)
-                    screen.blit(text,(200,300))
-                    pygame.display.flip()
-                    t.sleep(1)
-                    
+                
                     
                 pygame.display.flip()
        
