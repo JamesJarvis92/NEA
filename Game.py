@@ -1,10 +1,4 @@
-##display menu with options for game mode
-## run game modes
-    ## select maze gen/solve algorithms etc
-    ## play game 
-    ## once completed show score/add to leaderboard
-    ## go back to menu
-## option to play another game or quit
+
 
 from Gamemode1 import *
 from Gamemode2 import *
@@ -58,6 +52,7 @@ fps = 60
 timer = pygame.time.Clock()
 main_menu = True
 font = pygame.font.Font("freesansbold.ttf", 24)
+font1 = pygame.font.Font("freesansbold.ttf", 40)
 
 
 
@@ -65,6 +60,8 @@ run = True
 while run:
     screen.fill("light blue")
     timer.tick(fps)
+    text = font1.render("MAZE ESCAPE",True,BLACK)
+    screen.blit(text,(210,40))
     button1 = Button("Normal Mode",[230,100],RED,ORANGE,BLACK)    ## G1     ### add buttons to array so code is pretty
     button1.hovering()
     button1.draw()
