@@ -4,7 +4,7 @@ from Gamemode1 import *
 from Gamemode2 import *
 from Gamemode3 import *
 from Gamemode4 import *
-
+from opt_menu import *
 WHITE = ((255,255,255))
 BLUE = ((0,0,255))
 GREEN = ((0,255,0))
@@ -74,7 +74,10 @@ while run:
     button4 = Button("Escape enemies",[230,400],RED,ORANGE,BLACK)    ## G3
     button4.hovering()
     button4.draw()
-    qbutton = Button("QUIT", [230,500],RED,ORANGE,BLACK)     ## quit button
+    optbutton = Button("Options",[230,500],RED,ORANGE,BLACK)
+    optbutton.hovering()
+    optbutton.draw()
+    qbutton = Button("QUIT", [230,600],RED,ORANGE,BLACK)     ## quit button
     qbutton.hovering()
     qbutton.draw()
     
@@ -87,7 +90,9 @@ while run:
         gamemode3(screen)
     if button4.check_clicked():
         gamemode4(screen)
-        
+    if optbutton.check_clicked():
+        var = option_menu(screen)
+        print(var)
    
     
     for event in pygame.event.get():
