@@ -1,6 +1,6 @@
 import pygame
 from Wilsons import *
-
+import time as t
 pygame.init()
 swidth = 720
 sheight = 720   ## change cell size based on size of mazes
@@ -51,7 +51,12 @@ def gamemode1(screen):
     player = Player()
     running = True
     won = False
+    timer = pygame.time.Clock()
+    time = 0
     while running:
+        
+        
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -66,14 +71,29 @@ def gamemode1(screen):
                     player.move(1, 0, maze)
                 elif event.key == pygame.K_ESCAPE:
                     return None
+        timer.tick()
+        time += timer.get_time()
         screen.fill(WHITE)     ## when finished
         draw_maze(screen, maze)  ## draws maze
+        font = pygame.font.Font("freesansbold.ttf", 50)
+        timestr = (time/1000)
+        text = font.render(str(timestr),True,WHITE)
+        screen.blit(text,(300,300))
         player.draw(screen)
         if maze[player.y][player.x] == "2":  ## checks if player has reached goal
             won = True
             running = False
         pygame.display.flip()
-        
+    screen.fill(WHITE)
+    string1 = "It took you " + str((time/1000)) + " seconds"
+    string2 = "to complete the maze"
+    text1 = font.render(string1,True,BLACK)
+    text2 = font.render(string2,True,BLACK)
+    screen.blit(text1,(50,300))
+    screen.blit(text2,(100,400))
+    pygame.display.flip()
+    t.sleep(3)
+    
         
    
     
