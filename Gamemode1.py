@@ -85,7 +85,7 @@ def gamemode1(screen):
             running = False
         pygame.display.flip()
     screen.fill(WHITE)
-    string1 = "It took you " + str((time/1000)) + " seconds"
+    string1 = "It took you " + str((time/1000)) + " seconds"   ## victory menu
     string2 = "to complete the maze"
     text1 = font.render(string1,True,BLACK)
     text2 = font.render(string2,True,BLACK)
