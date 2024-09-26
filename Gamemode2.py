@@ -31,6 +31,7 @@ class Button:
     def draw(self,screen):
         btn = pygame.draw.rect(screen, self.mcol, self.button,0,5)
         pygame.draw.rect(screen, self.ocol, self.button,5,5)
+        font = pygame.font.Font("freesansbold.ttf", 24)
         text = font.render(self.text,True,self.textcol)
         screen.blit(text,(self.pos[0]+15,self.pos[1]+7))
         
@@ -228,6 +229,7 @@ def computer_race(screen):
 
     
 def gamemode2(screen):
+    screen = pygame.display.set_mode([720,720])
     run = True
     while run:
         screen.fill("light blue")
@@ -256,4 +258,4 @@ def gamemode2(screen):
     
         pygame.display.flip()
     
-gamemode2(screen)
+#gamemode2(screen)
