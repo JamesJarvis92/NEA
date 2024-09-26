@@ -45,7 +45,8 @@ def make_maze(x, y):
             maze[new_y][new_x] = EMPTY
             maze[new_y - y_step // 2][new_x - x_step // 2] = EMPTY
             make_maze(new_x, new_y)
-            
+    return maze
+        
 def remove_edges(maze):
     maze = maze[1:]
     for row in maze:
@@ -54,8 +55,9 @@ def remove_edges(maze):
 
 # Start the maze generation from the top-left corner
 maze[1][1] = "1"
-make_maze(1, 1)
-pprint(maze)
+maze = make_maze(1, 1)
+#maze = remove_edges(maze)
+#pprint(maze)
 #maze = remove_edges(maze)
 screen = pygame.display.set_mode((swidth, sheight))
 # Print the generated maze
@@ -69,7 +71,7 @@ def draw_maze(screen, maze):
             elif maze[y][x] == "1":
                 pygame.draw.rect(screen, RED, (x * square_size, y * square_size, square_size, square_size)) ## draws walls
     pygame.display.flip()
-    time.sleep(15)
+    time.sleep(60)
                 
 draw_maze(screen,maze)
 
