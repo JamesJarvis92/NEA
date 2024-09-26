@@ -6,6 +6,16 @@ def CreateBlankMaze(size):   ## creates 2D array of 0's
         maze.append("0"*size)
     return maze
 
+def CreateBlankMazeList(size):   ## creates 2D array of 0's
+    maze = []
+    for i in range(size):
+        row = []
+        for j in range(size):
+            row.append("0")
+        maze.append(row)
+    return maze
+
+
 
 def pprint(maze):
     for i in range(len(maze)):

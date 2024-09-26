@@ -1,131 +1,78 @@
-## randomly branch
-## check each cell before adding is not connected
-## add cell
-## once all directions are connected pop from stack and repeat
-## add popped cells to maze
-## end once stack is empty
-
 import random
-from stack import *
-from queue import *
 from CreateMaze import *
+import pygame
+import time
+pygame.init()
+swidth = 720
+sheight = 720   ## change cell size based on size of mazes
+square_size = 24 ## need to calculate this based on maze size or just have set sizes for game modes
+mwidth = 30#swidth // square_size
+mheight = 30#sheight // square_size 
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+GREEN = (0, 255, 0)
+RED = (255, 0, 0)
+GRAY = (192, 192, 192)
 
-maze = ["200000000",
-        "000000000",
-        "000000000",
-        "000000000",
-        "000000000",
-        "000000000",
-        "000000000",
-        "000000000",
-        "000000000"]
+# Constants for the maze dimensions
+WIDTH = 30  # Must be odd
+HEIGHT = 30  # Must be odd
 
-def is_connected_to_maze(maze,pos): ## checks new node isnt connected to any part of the maze other than previous cell
-    connected = 0
-    try:
-        if maze[pos[0]+1][pos[1]] != "0":  ## check down
-            connected += 1
-    except:
-        pass
-    try:
-        if maze[pos[0]-1][pos[1]] != "0": ## check up
-            connected += 1
-    except:
-        pass
-    try:
-        if maze[pos[0]][pos[1]+1] != "0": ## check right
-            connected += 1
-    except:
-        pass
-    try:
-        if maze[pos[0]][pos[1]-1] != "0":  ## check left
-            connected += 1
-    except:
-        pass
-    if connected>1:
-        return True
-    else:
-        return False
+# Characters for displaying the maze
+EMPTY = '1'
+WALL = '0'
+
+# Directions
+NORTH, SOUTH, EAST, WEST = 'N', 'S', 'E', 'W'
+DIRECTIONS = {NORTH: (0, -2), SOUTH: (0, 2), EAST: (2, 0), WEST: (-2, 0)}
+
+# Initialize the maze with walls
+maze = [[WALL for _ in range(WIDTH)] for _ in range(HEIGHT)]
+
+
+
+def in_maze(x, y):
+    return 0 <= x < WIDTH and 0 <= y < HEIGHT
+
+def make_maze(x, y):
+    directions = list(DIRECTIONS.keys())
+    random.shuffle(directions)
     
-def add_to_maze(path,maze,symbol): ## add path to maze
-    for node in path:
-        row = maze[node[0]]
-        row = list(row)
-        row[node[1]] = str(symbol) ## can add whatever symbol wanted
-        newrow = "".join(row)
-        maze[node[0]] = newrow
+    for direction in directions:
+        x_step, y_step = DIRECTIONS[direction]
+        new_x, new_y = x + x_step, y + y_step
+        if in_maze(new_x, new_y) and maze[new_y][new_x] == "0":
+            maze[new_y][new_x] = EMPTY
+            maze[new_y - y_step // 2][new_x - x_step // 2] = EMPTY
+            make_maze(new_x, new_y)
+            
+def remove_edges(maze):
+    maze = maze[1:]
+    for row in maze:
+        row = row[1:]
     return maze
 
-def in_maze(maze,pos):
-    try:
-        x = maze[pos[0]][pos[1]]
-        if pos[0]>=0 and pos[1]>=0:
-            return True
-        else:
-            return False
-    except:
-        return False
+# Start the maze generation from the top-left corner
+maze[1][1] = "1"
+make_maze(1, 1)
+pprint(maze)
+#maze = remove_edges(maze)
+screen = pygame.display.set_mode((swidth, sheight))
+# Print the generated maze
+#pprint(maze)
+
+def draw_maze(screen, maze):
+    for y in range(mheight):
+        for x in range(mwidth):
+            if maze[y][x] == "0":
+                pygame.draw.rect(screen, BLACK, (x * square_size, y * square_size, square_size, square_size))  ## draws path
+            elif maze[y][x] == "1":
+                pygame.draw.rect(screen, RED, (x * square_size, y * square_size, square_size, square_size)) ## draws walls
+    pygame.display.flip()
+    time.sleep(15)
+                
+draw_maze(screen,maze)
 
 
-def branch(node,maze):
-    nodes = Stack(1000)
-    nodes.push(node)
-    branch_found = False
-    while branch_found == False:
-        directions = ["up","down","left","right"]
-        direction = random.choice(directions)  ## select random direction
-        try:
-            if direction == "up":            ## checks if direction can be branched to
-                new_node = [node[0]-1,node[1]]
-                if is_connected_to_maze(maze,node) == False and in_maze(maze,new_node):   ## checks not connected and new node in maze
-                    branch_found = True   ## found a branch
-                    nodes.push(new_node)    ## add new node stack
-                    maze = add_to_maze([new_node],maze,"2")   ## adds unbacktracked cell to maze as "2"
-                    
-            elif direction == "down":            
-                new_node = [node[0]+1,node[1]]
-                if is_connected_to_maze(maze,node) == False and in_maze(maze,new_node):  
-                    branch_found = True
-                    nodes.push(new_node)
-                    maze = add_to_maze([new_node],maze,"2")
-                    
-            if direction == "left":           
-                new_node = [node[0],node[1]-1]
-                if is_connected_to_maze(maze,node) == False and in_maze(maze,new_node):  
-                    branch_found = True
-                    nodes.push(new_node)
-                    maze = add_to_maze([new_node],maze,"2")
-                    
-            if direction == "right":           
-                new_node = [node[0],node[1]+1]
-                if is_connected_to_maze(maze,node) == False and in_maze(maze,new_node):  
-                    branch_found = True
-                    nodes.push(new_node)
-                    maze = add_to_maze([new_node],maze,"2")
-               
-            directions.remove(direction)
-                    
-        except:                         ## if the direction isn't in maze direction is removed from list
-            directions.remove(direction)
-            
-        if len(directions) == 0: ## if no direction is valid breaks loop
-            break
-    print(nodes.peek())
-    if branch_found == False:
-        backtrack_node = nodes.spop()
-        maze = add_to_maze([add_node],maze,"1")  ## shows cell has been backtracked by changing it to a 1
-    #if nodes.isEmpty() == True:
-        #return maze
-    pprint(maze)
-    print(direction)
-    branch(nodes.peek(),maze)
-        
-
-print(branch([0,0],maze))
-print("x")        
-            
 
 
-# https://stackoverflow.com/questions/60532245/implementing-a-recursive-backtracker-to-generate-a-maze
-## read
-    
