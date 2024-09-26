@@ -61,7 +61,7 @@ def option_menu(screen):
     path2 = optButton("Path 2",[400,400],ORANGE,RED,BLACK,False)
     back_button = optButton("BACK",[230,600],ORANGE,RED,BLACK,True)
     while run:
-        screen.fill(WHITE)
+        screen.fill("light blue")
         text = bfont.render("MAZE GENERATION",True,BLACK)
         screen.blit(text,(120,40))
         text1 = bfont.render("PATHFINDING",True,BLACK)
