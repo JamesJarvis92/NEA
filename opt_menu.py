@@ -94,6 +94,6 @@ def option_menu(screen):
                 return [maze,pathfinding]
                     
         #time.sleep(1)
-screen = pygame.display.set_mode([720,720])
-print(option_menu(screen))
+#screen = pygame.display.set_mode([720,720])
+#print(option_menu(screen))
 pygame.quit()
