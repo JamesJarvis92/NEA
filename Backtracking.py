@@ -46,17 +46,30 @@ def make_maze(x, y):
             maze[new_y - y_step // 2][new_x - x_step // 2] = "1"   ## changes cell inbetween current and 2 away
             make_maze(new_x, new_y)
     return maze
-        
+
+def join_maze(maze):
+    nmaze = []
+    for row in maze:
+        nmaze.append("".join(row))
+    return nmaze
+
+
+   
 
 
 def backtracking_maze():
     maze = create_maze()
     maze[0][0] = "1"
     maze = make_maze(0,0)
-    maze = backtracking_add_end(maze)
+    maze = join_maze(maze)
+    pprint(maze)
+    print("\n")
+    maze = add_end(maze)
+    pprint(maze)
     return maze
 
 maze = backtracking_maze()
+print(len(maze),len(maze[0]))
 
 
 

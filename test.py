@@ -2,12 +2,13 @@ import pygame
 from Wilsons import *
 from Backtracking import *
 import time as t
+from CreateMaze import *
 pygame.init()
 swidth = 720
 sheight = 720   ## change cell size based on size of mazes
 square_size = 24 ## need to calculate this based on maze size or just have set sizes for game modes
-mwidth = swidth // square_size
-mheight = sheight // square_size 
+mwidth = 30
+mheight = 30 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 GREEN = (0, 255, 0)
@@ -21,7 +22,8 @@ def draw_maze(screen, maze):
                 pygame.draw.rect(screen, BLACK, (x * square_size, y * square_size, square_size, square_size))  ## draws path
             elif maze[y][x] == "1":
                 pygame.draw.rect(screen, RED, (x * square_size, y * square_size, square_size, square_size)) ## draws walls
-
+            
+            
 
 
 class Player:
