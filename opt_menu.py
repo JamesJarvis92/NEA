@@ -55,9 +55,9 @@ class optButton:
 def option_menu(screen):    
     run = True
     bfont = pygame.font.Font("freesansbold.ttf", 50)
-    wilsons = optButton("Maze 1",[80,150],ORANGE,RED,BLACK,True)
-    maze2 = optButton("Maze 2",[400,150],ORANGE,RED,BLACK,False)
-    dfs = optButton("Path 1",[80,400],ORANGE,RED,BLACK,True)
+    wilsons = optButton("Wilsons",[80,150],ORANGE,RED,BLACK,True)
+    maze2 = optButton("Backtracking",[400,150],ORANGE,RED,BLACK,False)
+    dfs = optButton("DFS",[80,400],ORANGE,RED,BLACK,True)
     path2 = optButton("Path 2",[400,400],ORANGE,RED,BLACK,False)
     back_button = optButton("BACK",[230,600],ORANGE,RED,BLACK,True)
     while run:
@@ -85,7 +85,7 @@ def option_menu(screen):
                 if wilsons.get_state():
                     maze = "wilsons"
                 else:
-                    maze = "maze2"
+                    maze = "bactracking"
                 if dfs.get_state():
                     pathfinding = "dfs"
                 else:

@@ -22,7 +22,7 @@ def pprint(maze):
         print(maze[i])
 
 
-def add_end(maze):  ## works for maze with 1's and 0's
+def wilsons_add_end(maze):  ## works for maze with 1's and 0's
     size = len(maze)-1
     end_range = len(maze)//5 ## change how close to bottom right end is
     found = False
@@ -37,7 +37,16 @@ def add_end(maze):  ## works for maze with 1's and 0's
             maze[end_y] = row ## adds goal to maze
             return maze
 
-
+def backtracking_add_end(maze):
+    found = False
+    while found == False:
+        x = random.randint(24,29)
+        y = random.randint(24,29)
+        if maze[y][x] == "1":
+            maze[y][x] = "2"
+            found = True
+    return maze
+            
 
 """ ## not top priority
 def conv_to_image_array(maze):  ## turn maze into array of codes so can draw maze using pixel art
