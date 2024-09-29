@@ -23,27 +23,28 @@ EMPTY = '1'
 WALL = '0'
 
 # Directions
-NORTH, SOUTH, EAST, WEST = 'N', 'S', 'E', 'W'
-DIRECTIONS = {NORTH: (0, -2), SOUTH: (0, 2), EAST: (2, 0), WEST: (-2, 0)}
+#NORTH, SOUTH, EAST, WEST = 'N', 'S', 'E', 'W'
+DIRECTIONS = {"up": (0, -2), "down": (0, 2), "left": (2, 0), "right": (-2, 0)}
 
 # Initialize the maze with walls
 maze = [[WALL for _ in range(WIDTH)] for _ in range(HEIGHT)]
-
+#print(maze)
 
 
 def in_maze(x, y):
     return 0 <= x < WIDTH and 0 <= y < HEIGHT
 
 def make_maze(x, y):
-    directions = list(DIRECTIONS.keys())
+    directions = ["up","down","left","right"]
+    print(directions)
     random.shuffle(directions)
     
     for direction in directions:
         x_step, y_step = DIRECTIONS[direction]
         new_x, new_y = x + x_step, y + y_step
         if in_maze(new_x, new_y) and maze[new_y][new_x] == "0":
-            maze[new_y][new_x] = EMPTY
-            maze[new_y - y_step // 2][new_x - x_step // 2] = EMPTY
+            maze[new_y][new_x] = "1"
+            maze[new_y - y_step // 2][new_x - x_step // 2] = "1"
             make_maze(new_x, new_y)
     return maze
         
@@ -53,7 +54,9 @@ def remove_edges(maze):
         row = row[1:]
     return maze
 
-# Start the maze generation from the top-left corner
+#def backtracking_maze():
+    
+
 maze[1][1] = "1"
 maze = make_maze(1, 1)
 #maze = remove_edges(maze)
@@ -62,6 +65,11 @@ maze = make_maze(1, 1)
 screen = pygame.display.set_mode((swidth, sheight))
 # Print the generated maze
 #pprint(maze)
+#print(maze)
+
+maze[1][1] = "1"
+maze = make_maze(1, 1)
+
 
 def draw_maze(screen, maze):
     for y in range(mheight):
