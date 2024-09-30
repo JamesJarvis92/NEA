@@ -55,13 +55,13 @@ class optButton:
 def option_menu(screen):    
     run = True
     bfont = pygame.font.Font("freesansbold.ttf", 50)
-    wilsons = optButton("Wilsons",[80,150],ORANGE,RED,BLACK,True)
-    maze2 = optButton("Backtracking",[400,150],ORANGE,RED,BLACK,False)
-    dfs = optButton("DFS",[80,400],ORANGE,RED,BLACK,True)
+    wilsons = optButton("Maze 1",[80,150],ORANGE,RED,BLACK,True)
+    maze2 = optButton("Maze 2",[400,150],ORANGE,RED,BLACK,False)
+    dfs = optButton("Path 1",[80,400],ORANGE,RED,BLACK,True)
     path2 = optButton("Path 2",[400,400],ORANGE,RED,BLACK,False)
     back_button = optButton("BACK",[230,600],ORANGE,RED,BLACK,True)
     while run:
-        screen.fill("light blue")     ## draw initial screen
+        screen.fill("light blue")
         text = bfont.render("MAZE GENERATION",True,BLACK)
         screen.blit(text,(120,40))
         text1 = bfont.render("PATHFINDING",True,BLACK)
@@ -71,7 +71,7 @@ def option_menu(screen):
         dfs.draw(screen)
         path2.draw(screen)
         back_button.draw(screen)
-        if wilsons.check_clicked() or maze2.check_clicked():   ## check if buttons are clicked and change state as required
+        if wilsons.check_clicked() or maze2.check_clicked():
             wilsons.change_state()
             maze2.change_state()
             time.sleep(0.1)
@@ -81,11 +81,11 @@ def option_menu(screen):
             time.sleep(0.1)
         pygame.display.flip()
         for event in pygame.event.get():
-            if event.type == pygame.QUIT or back_button.check_clicked(): ## go back to main menu and return chosen buttons
+            if event.type == pygame.QUIT or back_button.check_clicked():
                 if wilsons.get_state():
                     maze = "wilsons"
                 else:
-                    maze = "bactracking"
+                    maze = "maze2"
                 if dfs.get_state():
                     pathfinding = "dfs"
                 else:

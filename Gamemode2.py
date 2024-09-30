@@ -28,10 +28,9 @@ class Button:
         self.textcol = textcol
         self.button = pygame.rect.Rect((self.pos[0],self.pos[1]),(260,40))
     
-    def draw(self,screen):
+    def draw(self):
         btn = pygame.draw.rect(screen, self.mcol, self.button,0,5)
         pygame.draw.rect(screen, self.ocol, self.button,5,5)
-        font = pygame.font.Font("freesansbold.ttf", 24)
         text = font.render(self.text,True,self.textcol)
         screen.blit(text,(self.pos[0]+15,self.pos[1]+7))
         
@@ -229,20 +228,19 @@ def computer_race(screen):
 
     
 def gamemode2(screen):
-    screen = pygame.display.set_mode([720,720])
     run = True
     while run:
         screen.fill("light blue")
         buttona = Button("Race computer",[230,150],RED,ORANGE,BLACK)    
         buttona.hovering()
-        buttona.draw(screen)
+        buttona.draw()
         buttonb = Button("2-Player Mode",[230,250],RED,ORANGE,BLACK)    
         buttonb.hovering()
-        buttonb.draw(screen)
+        buttonb.draw()
         bbutton = Button("Back", [230,550],RED,ORANGE,BLACK)     ## quit button
         bbutton.hovering()
-        bbutton.draw(screen)
-        
+        bbutton.draw()
+        pygame.display.flip()
         if buttona.check_clicked():   
             computer_race(screen)
         if buttonb.check_clicked():   
@@ -254,7 +252,7 @@ def gamemode2(screen):
     
         for event in pygame.event.get():
             if event.type == pygame.QUIT or bbutton.check_clicked():  ## checks to close program
-                return None
+                run = False
     
         pygame.display.flip()
     
