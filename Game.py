@@ -3,6 +3,9 @@
 ## make new pathfinding
 ## make new maze
 
+### add timer to g1
+### sort g2
+ 
 
 
 from Gamemode1 import *
@@ -106,7 +109,7 @@ while run:
     
     pygame.display.flip()
 
-pygame.quit()
+#pygame.quit()
 
 
 
