@@ -46,6 +46,7 @@ def load_screen(screen):
 screen = pygame.display.set_mode((swidth, sheight))
 
 def gamemode1(screen, mazetype):
+    len_of_time = 4
     screen = pygame.display.set_mode((swidth, sheight))  ## initialises screen
     load_screen(screen)
     if mazetype == "Wilsons":
@@ -55,6 +56,8 @@ def gamemode1(screen, mazetype):
     player = Player()
     running = True
     won = False
+    ctime = 0
+    timer = pygame.time.Clock()
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -70,16 +73,31 @@ def gamemode1(screen, mazetype):
                     player.move(1, 0, maze)
                 elif event.key == pygame.K_ESCAPE:
                     return None
+        timer.tick()
+        font = pygame.font.Font("freesansbold.ttf", 50)
+        ctime  += ((timer.get_time())/1000)
+        if ctime> 10:
+            len_of_time = 5
         screen.fill(WHITE)     ## when finished
         draw_maze(screen, maze)  ## draws maze
         player.draw(screen)
+        text2 = font.render(str(ctime)[:len_of_time],True,WHITE)
+        screen.blit(text2,(300,300))
         if maze[player.y][player.x] == "2":  ## checks if player has reached goal
             won = True
             running = False
+            screen.fill(WHITE)
+            font1 = pygame.font.Font("freesansbold.ttf", 30)
+            win_string = "You took" + str(ctime) + " seconds to complete the maze"
+            text = font1.render(win_string,True,BLACK)
+            screen.blit(text,(40,300))
+            pygame.display.flip()
+            time.sleep(3)
+            return None
         pygame.display.flip()
         
         
    
     
-#gamemode1(screen)   
+gamemode1(screen,"Wilsons")   
 

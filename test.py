@@ -1,80 +1,151 @@
-import pygame
-from Wilsons import *
-from Backtracking import *
-pygame.init()
-swidth = 720
-sheight = 720   ## change cell size based on size of mazes
-square_size = 24 ## need to calculate this based on maze size or just have set sizes for game modes
-mwidth = swidth // square_size
-mheight = sheight // square_size 
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
-GREEN = (0, 255, 0)
-RED = (255, 0, 0)
-GRAY = (192, 192, 192)
+from stack import *
+from CreateMaze import *
+import random
+## install pygame by tools, python, python environment
 
-def draw_maze(screen, maze):
-    for y in range(mheight):
-        for x in range(mwidth):
-            if maze[y][x] == "0":
-                pygame.draw.rect(screen, BLACK, (x * square_size, y * square_size, square_size, square_size))  ## draws path
-            elif maze[y][x] == "1":
-                pygame.draw.rect(screen, RED, (x * square_size, y * square_size, square_size, square_size)) ## draws walls
-
-
-
-class Player:
-    def __init__(self):
-        self.x = 0
-        self.y = 0
-    def move(self, dx, dy, maze):
-        new_x = self.x + dx
-        new_y = self.y + dy
-        if 0 <= new_x < mwidth and 0 <= new_y < mheight and maze[new_y][new_x] != "0":  ## checks square trying to move to is valid
-            self.x = new_x    ## assigns new position
-            self.y = new_y
-    def draw(self, screen):
-        pygame.draw.rect(screen, GREEN, (self.x * square_size, self.y * square_size, square_size, square_size))  ##  draws player
-        
-def load_screen(screen):
-    screen.fill(WHITE)
-    font = pygame.font.Font("freesansbold.ttf", 50)
-    text = font.render("LOADING...",True,BLACK)
-    screen.blit(text,(200,300))
-    pygame.display.flip()
+class Cell:
+    def init(self, xpos, ypos, pathchar):
+        self.xpos = xpos
+        self.ypos = ypos
+        self.pathchar = pathchar
+     
+    def get_pos(self):
+        return [self.ypos,self.xpos]
     
-screen = pygame.display.set_mode((swidth, sheight))
-def gamemode1(screen,maze):
-    screen = pygame.display.set_mode((swidth, sheight))  ## initialises screen
-    load_screen(screen)
-    if maze == "Wilsons":
-        maze = WilsonsMazeGen(30) ## need to check maze is solvable with exit
-    elif maze == "backtracking":
-        maze = backtracking_maze()
-    player = Player()
-    running = True
-    won = False
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-            elif event.type == pygame.KEYDOWN:    ## does movements 
-                if event.key == pygame.K_UP:
-                    player.move(0, -1, maze)
-                elif event.key == pygame.K_DOWN:
-                    player.move(0, 1, maze)
-                elif event.key == pygame.K_LEFT:
-                    player.move(-1, 0, maze)
-                elif event.key == pygame.K_RIGHT:
-                    player.move(1, 0, maze)
-                elif event.key == pygame.K_ESCAPE:
-                    return None
-        screen.fill(WHITE)     ## when finished
-        draw_maze(screen, maze)  ## draws maze
-        player.draw(screen)
-        if maze[player.y][player.x] == "2":  ## checks if player has reached goal
-            won = True
-            running = False
-        pygame.display.flip()
+    def get_pathchar(self):
+        return self.pathchar
+    
+    def change_pathchar(self, char):
+        self.pathchar = char
 
-gamemode1(screen,"backtracking")
+class WilsonsMaze:
+    def init(self,size):
+        self.size = size
+        self.stack = Stack(1000)
+
+
+
+
+
+    def is_connected_to_maze(self,maze,cell):
+        pos = cell.get_pos()
+        connected = False
+        try:
+            if maze[pos[0]+1][pos[1]] == "1":  ## check down
+                connected = True
+        except:
+            pass
+        try:
+            if maze[pos[0]-1][pos[1]] == "1": ## check up
+                connected = True
+        except:
+            pass
+        try:
+            if maze[pos[0]][pos[1]+1] == "1": ## check right
+                connected = True
+        except:
+            pass
+        try:
+            if maze[pos[0]][pos[1]-1] == "1":  ## check left
+                connected = True
+        except:
+            pass
+        return connected
+
+
+    def select_start(self, maze):
+        for i in range(len(maze)**3): ## how many tries to find open node before gives up
+            vertlength = self.size - 1
+            horzlength = self.size - 1
+            y = random.randint(0,vertlength)   ## selects random squares
+            x = random.randint(0,horzlength)
+            start_cell = maze[y][x]
+            if start_cell.get_pathchar() == "0" and WilsonsMaze.is_connected_to_maze(maze,start_cell)
+                return start_cell.get_pos()
+        return "END" ## returns if no node is found
+
+
+    def in_maze(self, maze,cell):
+        pos = cell.get_pos()
+        try:
+            x = maze[pos[0]][pos[1]]
+            if pos[0]>=0 and pos[1]>=0:
+                return True
+            else:
+                return False
+        except:
+            return False
+
+
+    def surrounding_nodes(self, node_pos):
+        return [[node_pos[0]-1,node_pos[1]],[node_pos[0]+1,node_pos[1]],[node_pos[0],node_pos[1]-1],[node_pos[0],node_pos[1]+1]]
+
+
+    def remove_loop(self):
+        loop_lengths = [0]
+        path = []
+        new_pos = self.stack.spop() ## removes one wanting to be added
+        pos2 = self.stack.spop()   ## removes one before to avoid false loop
+        while self.stack.isEmpty() == False:
+            path.append(self.stack.spop())   
+        if len(path)>1:
+            path = path[::-1]
+        for node in WilsonsMaze.surrounding_nodes(new_pos):
+            if node in path:
+                x = path.index(node)
+                loop_lengths.append(len(path)-x)   ## append lengths of loops
+        for node in path:    
+            self.stack.push(node)
+        self.stack.push(pos2)
+        self.stack.push(new_pos)
+        return max(loop_lengths)
+    
+    
+    def add_to_maze(path,maze): ##### change this probably
+        for cell in path:
+            cell.change_pathchar("1")
+        
+
+
+    def findpath(self,maze,start_cell):
+        last_direction = "" ## so it can't go back in itself
+        directions = ["up","down","left","right"] ## used to make code make more sense
+        self.stack.push(start_cell) ## add start to stack
+        while WilsonsMaze.is_connected_to_maze(maze,self.stack.peek()) != True: ## while  path is not connected
+            ccell = self.stack.peek()
+            pos = ccell.get_pos()
+            direction = random.choice(directions)
+            move_is_valid = True
+            try:                            
+                if direction == "up":         ## directions 
+                    new_pos = [pos[0]-1,pos[1]]
+                elif direction == "down":
+                    new_pos = [pos[0]+1,pos[1]]
+                elif direction == "left":
+                    new_pos = [pos[0],pos[1]-1]
+                elif direction == "right":
+                    new_pos = [pos[0],pos[1]+1]
+                if WilsonsMaze.in_maze(maze,new_pos):    ## checks in maze
+                    self.stack.push(new_pos)
+                    for i in range(WilsonsMaze.remove_loop(self.stack)):  ## removes loop
+                        z =self.stack.spop()
+            except:
+                pass
+        x =  self.stack.seestack() ## return path when connected without hashtags
+        len_of_path = x.index("#")
+        return x[:len_of_path]
+        
+
+def WilsonsMazeGen(self,size):
+    ## make maze out of cell class
+    start_cell = [WilsonsMaze.select_start(maze)]  ## first node in form [[y,x]]
+    maze = WilsonsMaze.add_to_maze(start_cell,maze)  ## adds first node
+    done = False
+    start_node = maze[0,0].get_pos() ## always starts from [0,0]
+    while done == False:
+        path = WilsonsMaze.findpath(maze,start_node)
+        maze = add_to_maze(path,maze)   
+        start_node = select_start(maze) ## picks start node
+        if start_node == "END": ## checks start node is a node not end
+            maze = add_end(maze)
+            return maze

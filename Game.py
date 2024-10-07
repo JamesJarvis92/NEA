@@ -99,7 +99,7 @@ while run:
     if button3.check_clicked():
         gamemode3(screen, var[0])
     if button4.check_clicked():
-        gamemode4(screen)
+        gamemode4(screen, var[0],var[1])
     if optbutton.check_clicked():
         var = option_menu(screen)   ## [maze,path]
         print(var)
