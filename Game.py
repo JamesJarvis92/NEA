@@ -3,7 +3,7 @@
 ## make new pathfinding
 ## make new maze
 
-### add timer to g1
+
 ### sort crash when running second time
 ### add buttons passed into optmenu - dont reset everytime
  
@@ -67,7 +67,7 @@ font1 = pygame.font.Font("freesansbold.ttf", 40)
 var = ["Wilsons","DFS"]
 run = True
 while run:
-    print(var)
+    #print(var)
     screen.fill("light blue")
     timer.tick(fps)
     text = font1.render("MAZE ESCAPE",True,BLACK)
@@ -101,7 +101,7 @@ while run:
     if button4.check_clicked():
         gamemode4(screen, var[0],var[1])
     if optbutton.check_clicked():
-        var = option_menu(screen)   ## [maze,path]
+        var = option_menu(screen,var[0],var[1])   ## [maze,path]
         print(var)
    
     

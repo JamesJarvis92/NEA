@@ -52,13 +52,21 @@ class optButton:
         else:
             self.state = True
             
-def option_menu(screen):    
+def option_menu(screen,mazetype,pathtype):    
     run = True
     bfont = pygame.font.Font("freesansbold.ttf", 50)
-    wilsons = optButton("Maze 1",[80,150],ORANGE,RED,BLACK,True)
-    maze2 = optButton("Maze 2",[400,150],ORANGE,RED,BLACK,False)
-    dfs = optButton("Path 1",[80,400],ORANGE,RED,BLACK,True)
-    path2 = optButton("Path 2",[400,400],ORANGE,RED,BLACK,False)
+    if mazetype == "Wilsons":
+        wilsons = optButton("Maze 1",[80,150],ORANGE,RED,BLACK,True)
+        backtracking = optButton("Maze 2",[400,150],ORANGE,RED,BLACK,False)
+    elif mazetype == "Backtracking":
+        wilsons = optButton("Maze 1",[80,150],ORANGE,RED,BLACK,False)
+        backtracking = optButton("Maze 2",[400,150],ORANGE,RED,BLACK,True)
+    if pathtype == "DFS":
+        dfs = optButton("Path 1",[80,400],ORANGE,RED,BLACK,True)
+        path2 = optButton("Path 2",[400,400],ORANGE,RED,BLACK,False)
+    elif pathtype == "A*":
+        dfs = optButton("Path 1",[80,400],ORANGE,RED,BLACK,False)
+        path2 = optButton("Path 2",[400,400],ORANGE,RED,BLACK,True)
     back_button = optButton("BACK",[230,600],ORANGE,RED,BLACK,True)
     while run:
         screen.fill("light blue")
@@ -67,13 +75,13 @@ def option_menu(screen):
         text1 = bfont.render("PATHFINDING",True,BLACK)
         screen.blit(text1,(200,300))
         wilsons.draw(screen)
-        maze2.draw(screen)
+        backtracking.draw(screen)
         dfs.draw(screen)
         path2.draw(screen)
         back_button.draw(screen)
-        if wilsons.check_clicked() or maze2.check_clicked():
+        if wilsons.check_clicked() or backtracking.check_clicked():
             wilsons.change_state()
-            maze2.change_state()
+            backtracking.change_state()
             time.sleep(0.1)
         if dfs.check_clicked() or path2.check_clicked():
             dfs.change_state()
@@ -89,7 +97,7 @@ def option_menu(screen):
                 if dfs.get_state():
                     pathfinding = "DFS"
                 else:
-                    pathfinding = "path2"
+                    pathfinding = "A*"
                     time.sleep(0.1)
                 return [maze,pathfinding]
                     

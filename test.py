@@ -4,7 +4,7 @@ import random
 ## install pygame by tools, python, python environment
 
 class Cell:
-    def init(self, xpos, ypos, pathchar):
+    def __init__(self, xpos, ypos, pathchar):
         self.xpos = xpos
         self.ypos = ypos
         self.pathchar = pathchar
@@ -19,9 +19,10 @@ class Cell:
         self.pathchar = char
 
 class WilsonsMaze:
-    def init(self,size):
+    def init(self,size,maze):
         self.size = size
         self.stack = Stack(1000)
+        self.maze = maze
 
 
 
@@ -136,16 +137,18 @@ class WilsonsMaze:
         return x[:len_of_path]
         
 
-def WilsonsMazeGen(self,size):
-    ## make maze out of cell class
-    start_cell = [WilsonsMaze.select_start(maze)]  ## first node in form [[y,x]]
-    maze = WilsonsMaze.add_to_maze(start_cell,maze)  ## adds first node
-    done = False
-    start_node = maze[0,0].get_pos() ## always starts from [0,0]
-    while done == False:
-        path = WilsonsMaze.findpath(maze,start_node)
-        maze = add_to_maze(path,maze)   
-        start_node = select_start(maze) ## picks start node
-        if start_node == "END": ## checks start node is a node not end
-            maze = add_end(maze)
-            return maze
+    def WilsonsMazeGen(self,size):
+        ## make maze out of cell class
+        start_cell = [WilsonsMaze.select_start(maze)]  ## first node in form [[y,x]]
+        maze = WilsonsMaze.add_to_maze(start_cell,maze)  ## adds first node
+        done = False
+        start_node = maze[0,0].get_pos() ## always starts from [0,0]
+        while done == False:
+            path = WilsonsMaze.findpath(maze,start_node)
+            maze = WilsonsMaze.add_to_maze(path,maze)   
+            start_node = WilsonsMaze.select_start(maze) ## picks start node
+            if start_node == "END": ## checks start node is a node not end
+                maze = add_end(maze)
+                return maze
+      
+x = WilsonsMaze()

@@ -99,5 +99,5 @@ def gamemode1(screen, mazetype):
         
    
     
-gamemode1(screen,"Wilsons")   
+#gamemode1(screen,"Wilsons")   
 
