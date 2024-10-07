@@ -1,7 +1,6 @@
-## use manhattan distance for zone 
 import pygame
 from Wilsons import *
-
+from Backtracking import *
 def pprint(maze):
     for i in range(len(maze)):
         print(maze[i])
@@ -75,11 +74,14 @@ def load_screen(screen):
 
 
 
-def gamemode3(screen):
+def gamemode3(screen,mazetype):
     zone_sizes = [10,8,6,4]
     for size in zone_sizes:
         load_screen(screen)
-        maze = WilsonsMazeGen(30) ## need to check maze is solvable with exit
+        if mazetype == "Wilsons":
+            maze = WilsonsMazeGen(30) ## need to check maze is solvable with exit
+        elif mazetype == "Backtracking":
+            maze = backtracking_maze()
         player = Player()
         running = True
         won = False
@@ -106,6 +108,7 @@ def gamemode3(screen):
                 won = True
                 running = False
             pygame.display.flip()
+        maze = []
         
 #screen = pygame.display.set_mode((swidth, sheight))
 

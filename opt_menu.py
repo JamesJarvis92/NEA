@@ -83,11 +83,11 @@ def option_menu(screen):
         for event in pygame.event.get():
             if event.type == pygame.QUIT or back_button.check_clicked():
                 if wilsons.get_state():
-                    maze = "wilsons"
+                    maze = "Wilsons"
                 else:
-                    maze = "maze2"
+                    maze = "Backtracking"
                 if dfs.get_state():
-                    pathfinding = "dfs"
+                    pathfinding = "DFS"
                 else:
                     pathfinding = "path2"
                     time.sleep(0.1)

@@ -4,7 +4,8 @@
 ## make new maze
 
 ### add timer to g1
-### sort g2
+### sort crash when running second time
+### add buttons passed into optmenu - dont reset everytime
  
 
 
@@ -63,9 +64,10 @@ font = pygame.font.Font("freesansbold.ttf", 24)
 font1 = pygame.font.Font("freesansbold.ttf", 40)
 
 
-
+var = ["Wilsons","DFS"]
 run = True
 while run:
+    print(var)
     screen.fill("light blue")
     timer.tick(fps)
     text = font1.render("MAZE ESCAPE",True,BLACK)
@@ -91,15 +93,15 @@ while run:
     
     pygame.display.flip()
     if button1.check_clicked():   ### add time to complete (make maze with missing corner to have timer) and leaderboard,   countdown to start using while loop and sleep(1)
-        gamemode1(screen)
-    if button2.check_clicked():   ### add winner screen
-        gamemode2(screen)
+        gamemode1(screen,var[0])
+    if button2.check_clicked():   
+        gamemode2(screen,var[0],var[1])
     if button3.check_clicked():
-        gamemode3(screen)
+        gamemode3(screen, var[0])
     if button4.check_clicked():
         gamemode4(screen)
     if optbutton.check_clicked():
-        var = option_menu(screen)
+        var = option_menu(screen)   ## [maze,path]
         print(var)
    
     

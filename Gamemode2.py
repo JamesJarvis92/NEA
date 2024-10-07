@@ -1,5 +1,6 @@
 import pygame
 from Wilsons import *
+from Backtracking import *
 from DFS import *
 import time as t
 
@@ -31,6 +32,7 @@ class Button:
     def draw(self,screen):
         btn = pygame.draw.rect(screen, self.mcol, self.button,0,5)
         pygame.draw.rect(screen, self.ocol, self.button,5,5)
+        font = pygame.font.Font("freesansbold.ttf", 24)
         text = font.render(self.text,True,self.textcol)
         screen.blit(text,(self.pos[0]+15,self.pos[1]+7))
         
@@ -85,9 +87,12 @@ def load_screen(screen):
     
 
 
-def two_player_mode(screen):
+def two_player_mode(screen, mazetype):
     load_screen(screen)
-    maze = WilsonsMazeGen(30) ## need to check maze is solvable with exit
+    if mazetype == "Wilsons":
+        maze = WilsonsMazeGen(30) ## need to check maze is solvable with exit
+    elif mazetype == "Backtracking":
+        maze = backtracking_maze()
     player1 = Player(GREEN,[0,0])
     player2 = Player(BLUE,[0,0])
     running = True
@@ -140,7 +145,7 @@ def two_player_mode(screen):
 
 
 
-def computer_race(screen):
+def computer_race(screen,mazetype, pathtype):
     lost = False
     times = [500,400,300,250,200]
     rounds = ["1","2","3","4","5"]
@@ -157,10 +162,16 @@ def computer_race(screen):
             screen.blit(text,(200,300))
             pygame.display.flip()
             rounds.pop(0)
-            maze = WilsonsMazeGen(30) ## need to check maze is solvable with exit
+            if mazetype == "Wilsons":
+                maze = WilsonsMazeGen(30) ## need to check maze is solvable with exit
+            elif mazetype == "Backtracking":
+                maze = backtracking_maze()
             t.sleep(1)
             end = find_end(maze)
-            enemy_moves = dfs(maze,[0,0],end)
+            if pathtype == "DFS":
+                enemy_moves = dfs(maze,[0,0],end)
+            elif pathtype == "A*":
+                pass        ## add a star here
             esteps = conv_to_moves(enemy_moves)
             player = Player(GREEN,[0,0])
             enemy1 = Player(GRAY,[0,0])
@@ -227,7 +238,7 @@ def computer_race(screen):
 
 
     
-def gamemode2(screen):
+def gamemode2(screen, mazetype, pathtype):
     #screen = pygame.display.set_mode([720,720])
     run = True
     while run:
@@ -243,9 +254,9 @@ def gamemode2(screen):
         bbutton.draw(screen)
         pygame.display.flip()
         if buttona.check_clicked():   
-            computer_race(screen)
+            computer_race(screen, mazetype, pathtype)
         if buttonb.check_clicked():   
-            two_player_mode(screen)
+            two_player_mode(screen, mazetype)
     
     
         

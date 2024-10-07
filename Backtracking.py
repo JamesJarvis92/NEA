@@ -70,6 +70,7 @@ def backtrack_add_end(maze):
             
 
 def backtracking_maze():
+    maze = []
     maze = create_maze()
     maze[0][0] = "1"
     maze = make_maze(0,0)
@@ -81,13 +82,15 @@ def backtracking_maze():
     print("z")
     return maze
 
-maze = backtracking_maze()
+
+    
+#maze = backtracking_maze()
 #pprint(maze)
 #print(len(maze),len(maze[0]))
 
 
-
-
+#print(maze)
+"""
 pygame.init()
 swidth = 720
 sheight = 720   ## change cell size based on size of mazes
@@ -113,7 +116,7 @@ screen.fill(WHITE)
 draw_maze(screen,maze)
 pygame.display.flip()
 time.sleep(3)
-
+"""
 
 
 

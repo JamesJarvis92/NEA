@@ -2,6 +2,7 @@ import pygame
 import time as t
 import random
 from Wilsons import *
+from Backtracking import *
 from DFS import *
 ### make validator for maze and enemy start/ has path
 pygame.init()
@@ -80,6 +81,7 @@ def back_to_org(maze):
                 nrow += "1"
         nmaze.append(nrow)
     return nmaze
+
 def find_enemy_start(maze):
     starts = [[0,25],[0,26],[0,27],[0,28],[1,25],[1,26],[1,27],[1,28],[2,25],[2,26],[2,27],[2,28],[25,0],[26,0],[27,0],[28,0],[25,1],[26,1],[27,1],[28,1],[25,2],[26,2],[27,2],[28,2]]
     while True:
@@ -87,7 +89,7 @@ def find_enemy_start(maze):
         if maze[start[0]][start[1]] == "1":
             return start
     
-def gamemode4(screen):
+def gamemode4(screen, mazetype, pathtype):
     lost = False
     times = [500,400,300,250,200]
     rounds = ["1","2","3","4","5"]
@@ -103,13 +105,19 @@ def gamemode4(screen):
             rounds.pop(0)
             while True:
                 try:
-                    maze = WilsonsMazeGen(30) ## need to check maze is solvable with exit
-                    t.sleep(1)
+                    if mazetype == "Wilsons":
+                        maze = WilsonsMazeGen(30) ## need to check maze is solvable with exit
+                    elif mazetype == "Backtracking":
+                        maze = backtracking_maze()
+                    
                     end = find_end(maze)
                     estart = find_enemy_start(maze)
                     player = Player(GREEN,[0,0])
-                    enemy1 = Player(GRAY, estart)    
-                    enemy_moves = dfs(maze,[enemy1.y,enemy1.x],[player.y,player.x])
+                    enemy1 = Player(GRAY, estart)   
+                    if pathtype == "DFS":
+                        enemy_moves = dfs(maze,[enemy1.y,enemy1.x],[player.y,player.x])
+                    elif pathtype == "A*":
+                        pass
                     esteps = conv_to_moves(enemy_moves)
                     break
                 except:
@@ -166,7 +174,10 @@ def gamemode4(screen):
                     if moved:
                         ppos = [player.y,player.x]
                         epos = [enemy1.y,enemy1.x]
-                        enemy_moves = dfs(back_to_org(maze),epos,ppos)
+                        if pathtype == "DFS":
+                            enemy_moves = dfs(back_to_org(maze),epos,ppos)
+                        elif pathtype == "A*":
+                            pass
                         esteps = conv_to_moves(enemy_moves)
                         moved = False
                     

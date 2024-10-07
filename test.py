@@ -1,7 +1,6 @@
 import pygame
+from Wilsons import *
 from Backtracking import *
-from CreateMaze import *
-
 pygame.init()
 swidth = 720
 sheight = 720   ## change cell size based on size of mazes
@@ -45,13 +44,13 @@ def load_screen(screen):
     pygame.display.flip()
     
 screen = pygame.display.set_mode((swidth, sheight))
-def gamemode1(screen):
+def gamemode1(screen,maze):
     screen = pygame.display.set_mode((swidth, sheight))  ## initialises screen
-    print("x")
-    #load_screen(screen)
-    maze = backtracking_maze() ## need to check maze is solvable with exit
-    print("z")
-    print(maze)
+    load_screen(screen)
+    if maze == "Wilsons":
+        maze = WilsonsMazeGen(30) ## need to check maze is solvable with exit
+    elif maze == "backtracking":
+        maze = backtracking_maze()
     player = Player()
     running = True
     won = False
@@ -77,5 +76,5 @@ def gamemode1(screen):
             won = True
             running = False
         pygame.display.flip()
-        
-gamemode1(screen)
+
+gamemode1(screen,"backtracking")
