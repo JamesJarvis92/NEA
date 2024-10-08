@@ -88,7 +88,7 @@ def gamemode1(screen, mazetype):
             running = False
             screen.fill(WHITE)
             font1 = pygame.font.Font("freesansbold.ttf", 30)
-            win_string = "You took" + str(ctime) + " seconds to complete the maze"
+            win_string = "You took" + str(ctime)[:len_of_time] + " seconds to complete the maze"
             text = font1.render(win_string,True,BLACK)
             screen.blit(text,(40,300))
             pygame.display.flip()
