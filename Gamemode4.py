@@ -103,6 +103,9 @@ def gamemode4(screen, mazetype, pathtype):
             screen.blit(text,(200,300))
             pygame.display.flip()
             rounds.pop(0)
+            screen.fill(RED)   ##### delete later
+            pygame.display.flip()    ###### delete later
+            t.sleep(1)    ##### delete later
             while True:
                 try:
                     if mazetype == "Wilsons":

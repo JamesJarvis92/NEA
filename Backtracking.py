@@ -74,9 +74,6 @@ def backtracking_maze():
     maze = create_maze()
     maze[0][0] = "1"
     maze = make_maze(0,0)
-    
-    #pprint(maze)
-    #print("\n")
     maze = backtrack_add_end(maze)
     maze = join_maze(maze)
     print("z")
@@ -84,39 +81,7 @@ def backtracking_maze():
 
 
     
-#maze = backtracking_maze()
-#pprint(maze)
-#print(len(maze),len(maze[0]))
 
-
-#print(maze)
-"""
-pygame.init()
-swidth = 720
-sheight = 720   ## change cell size based on size of mazes
-square_size = 24 ## need to calculate this based on maze size or just have set sizes for game modes
-mwidth = swidth // square_size
-mheight = sheight // square_size 
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
-GREEN = (0, 255, 0)
-RED = (255, 0, 0)
-GRAY = (192, 192, 192)
-
-def draw_maze(screen, maze):
-    for y in range(mheight):
-        for x in range(mwidth):
-            if maze[y][x] == "0":
-                pygame.draw.rect(screen, BLACK, (x * square_size, y * square_size, square_size, square_size))  ## draws path
-            elif maze[y][x] == "1":
-                pygame.draw.rect(screen, RED, (x * square_size, y * square_size, square_size, square_size)) ## draws walls
-
-screen = pygame.display.set_mode((swidth, sheight))
-screen.fill(WHITE)
-draw_maze(screen,maze)
-pygame.display.flip()
-time.sleep(3)
-"""
 
 
 
