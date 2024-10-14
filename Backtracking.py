@@ -56,7 +56,24 @@ def join_maze(maze):
 
 
    
+
+        
+def add_gap(maze,pos):
+    try:
+        row = maze[pos[0]]
+        row = list(row)
+        row[pos[1]] = "1"
+        newrow = "".join(row)
+        maze[pos[0]] = newrow
+    except:
+        pass
+    return maze
+
 def backtrack_add_end(maze):
+    for i in range(len(maze)):
+        if "2" in maze[i]:
+            w = (maze[i]).index("2")
+            maze[i][w] = "1"
     found = False
     end_x = [28,27,26,25,28,27,26,25]
     end_y = [28,27,26,25,25,26,27,28]
@@ -69,7 +86,47 @@ def backtrack_add_end(maze):
         end_x.pop(0)
         end_y.pop(0)
     return maze
-            
+
+
+def remove_squares(maze):
+    for i in range(3):       ## upper left
+        found = False
+        while found == False:
+            x = random.randint(1,14)
+            y = random.randint(1,14)
+            if maze[y][x] == "0":
+                maze = add_gap(maze,[y,x])
+                found = True
+    
+    for i in range(3):     ## upper right
+        found = False
+        while found == False:
+            x = random.randint(15,28)
+            y = random.randint(1,14)
+            if maze[y][x] == "0":
+                maze = add_gap(maze,[y,x])
+                found = True
+                
+    for i in range(3):       ## lower left
+        found = False
+        while found == False:
+            x = random.randint(15,28)
+            y = random.randint(1,14)
+            if maze[y][x] == "0":
+                maze = add_gap(maze,[y,x])
+                found = True
+                
+    for i in range(3):       ## lower right
+        found = False
+        while found == False:
+            x = random.randint(15,28)
+            y = random.randint(15,28)
+            if maze[y][x] == "0":
+                maze = add_gap(maze,[y,x])
+                found = True
+                  
+    return maze
+
 
 def backtracking_maze():
     maze = []
@@ -77,10 +134,17 @@ def backtracking_maze():
     maze[0][0] = "1"
     maze = make_maze(0,0)
     maze = backtrack_add_end(maze)
+    ### remove squares here so dont have to separate rows
     maze = join_maze(maze)
     return maze
 
 
+#maze1 = backtracking_maze()
+#pprint(maze1)
+#print("\n\n")
+#maze2 = backtracking_maze()
+#pprint(maze2)
+#pprint(remove_squares(backtracking_maze()))
 ## remove some walls to make it work for enemies chasing
 
 
