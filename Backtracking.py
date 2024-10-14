@@ -58,14 +58,16 @@ def join_maze(maze):
    
 def backtrack_add_end(maze):
     found = False
-    end_x = 28
-    end_y = 28
+    end_x = [28,27,26,25,28,27,26,25]
+    end_y = [28,27,26,25,25,26,27,28]
     while found == False:
-        if maze[end_y][end_x] == "1":
-            maze[end_y][end_x] = "2"
+        if maze[end_y[0]][end_x[0]] == "1":
+            maze[end_y[0]][end_x[0]] = "2"
             found = True
             return maze
             break
+        end_x.pop(0)
+        end_y.pop(0)
     return maze
             
 
@@ -76,15 +78,10 @@ def backtracking_maze():
     maze = make_maze(0,0)
     maze = backtrack_add_end(maze)
     maze = join_maze(maze)
-    print("z")
     return maze
 
 
     
-
-
-
-
 
 
 

@@ -52,7 +52,11 @@ def gamemode1(screen, mazetype):
     if mazetype == "Wilsons":
         maze = WilsonsMazeGen(30) ## need to check maze is solvable with exit
     elif mazetype == "Backtracking":
+        #print("iwucb")
+        pygame.event.get()
+        #print("zzzzzz")
         maze = backtracking_maze()
+        
     player = Player()
     running = True
     won = False

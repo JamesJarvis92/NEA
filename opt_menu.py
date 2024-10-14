@@ -98,7 +98,7 @@ def option_menu(screen,mazetype,pathtype):
                     pathfinding = "DFS"
                 else:
                     pathfinding = "A*"
-                    time.sleep(0.1)
+                time.sleep(0.1)
                 return [maze,pathfinding]
                     
         #time.sleep(1)
