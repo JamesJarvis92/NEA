@@ -86,23 +86,24 @@ def find_enemy_start(maze):
     starts = [[0,25],[0,26],[0,27],[0,28],[1,25],[1,26],[1,27],[1,28],[2,25],[2,26],[2,27],[2,28],[25,0],[26,0],[27,0],[28,0],[25,1],[26,1],[27,1],[28,1],[25,2],[26,2],[27,2],[28,2]]
     while True:
         start = random.choice(starts)
-        if maze[start[0]][start[1]] == "1" and dfs(back_to_org(maze),start[0],start[1]) != False:
+        if maze[start[0]][start[1]] == "1":
             return start
     
 def gamemode4(screen, mazetype, pathtype):
     lost = False
     times = [500,400,300,250,200]
-    rounds = ["1","2","3","4","5"]
+    rounds = [1,2,3,4,5]
     screen = pygame.display.set_mode((swidth, sheight))  ## initialises screen
     for time in times:
         if lost == False:
             screen.fill(WHITE)
             font = pygame.font.Font("freesansbold.ttf", 50)
-            string = "Round " + rounds[0]
+            string = "Round " + str(rounds[0])
             text = font.render(string,True,BLACK)
             screen.blit(text,(200,300))
             pygame.display.flip()
-            rounds.pop(0)
+            t.sleep(1)
+            
             while True:
                 try:
                     if mazetype == "Wilsons":
@@ -111,23 +112,25 @@ def gamemode4(screen, mazetype, pathtype):
                         maze = backtracking_maze()
                     
                     end = find_end(maze)
-                    #estart = find_enemy_start(maze)
+                    estart1 = find_enemy_start(maze)
+                    if rounds[0]>1:
+                        estart2 = find_enemy_start(maze)
+                        enemy2 = Player(GRAY,estart2)
                     player = Player(GREEN,[0,0])
-                    enemy1 = Player(GRAY, find_enemy_start(maze))   
-                    enemy2 = Player(GRAY, find_enemy_start(maze))
+                    enemy1 = Player(GRAY, estart1)
+                    
                     if pathtype == "DFS":
-                        enemy_moves1 = dfs(maze,[enemy1.y,enemy1.x],[player.y,player.x])
-                        enemy_moves2 = dfs(maze,[enemy2.y,enemy2.x],[player.y,player.x])
+                        enemy1_moves = dfs(maze,[enemy1.y,enemy1.x],[player.y,player.x])
+                        if rounds[0] >1:
+                            enemy2_moves = dfs(maze,[enemy2.y,enemy2.x],[player.y,player.x])
                     elif pathtype == "A*":
                         pass
-                    esteps1 = conv_to_moves(enemy_moves1)
-                    esteps2 = conv_to_moves(enemy_moves2)
+                    e1steps = conv_to_moves(enemy1_moves)
+                    if rounds[0]>1:
+                        e2steps = conv_to_moves(enemy2_moves)
                     break
                 except:
-                    pass
-                for event in pygame.event.get():
-                    if event.type == pygame.QUIT:
-                        pygame.event.pump()
+                    break
             running = True
             won = False
             timer = pygame.time.Clock()
@@ -156,9 +159,7 @@ def gamemode4(screen, mazetype, pathtype):
                             moved = True
                         elif event.key == pygame.K_ESCAPE:
                             return None
-                        else:   ## remove
-                            pygame.event.pump()
-                if [player.x,player.y] == [enemy1.x,enemy1.y] or [player.x,player.y] == [enemy2.x,enemy2.y]:
+                if [player.x,player.y] == [enemy1.x,enemy1.y] :
                     screen.fill(WHITE)
                     font = pygame.font.Font("freesansbold.ttf", 50)
                     text = font.render("You lost :(",True,BLACK)
@@ -167,32 +168,51 @@ def gamemode4(screen, mazetype, pathtype):
                     t.sleep(1)
                     running = False
                     return None
+                if rounds[0]>1:
+                    if [player.x,player.y] == [enemy1.x,enemy1.y] :
+                        screen.fill(WHITE)
+                        font = pygame.font.Font("freesansbold.ttf", 50)
+                        text = font.render("You lost :(",True,BLACK)
+                        screen.blit(text,(200,300))
+                        pygame.display.flip()
+                        t.sleep(1)
+                        running = False
+                        return None
                     
                 if t1>time:   ## checks how many milliseconds since last call
                     try:
-                        e1step = esteps1[0]
-                        enemy1.move(e1step[1],e1step[0],maze)
-                        esteps1.pop(0)
-                        e2step = esteps2[0]
-                        enemy2.move(e2step[1],e2step[0],maze)
-                        esteps2.pop(0)
+                        step = e1steps[0]
+                        enemy1.move(step[1],step[0],maze)
+                        e1steps.pop(0)
             
                         t1 = 0  ## resets time between enemy moves
                     except:
                         lost = True
                         running = False
+                    if rounds[0] > 1:
+                        try:
+                            step = e2steps[0]
+                            enemy2.move(step[1],step[0],maze)
+                            e2steps.pop(0)
+            
+                            t1 = 0  ## resets time between enemy moves
+                        except:
+                            lost = True
+                            running = False
                 if t2>1000:
                     if moved:
                         ppos = [player.y,player.x]
                         e1pos = [enemy1.y,enemy1.x]
-                        e2pos = [enemy2.y,enemy2.x]
                         if pathtype == "DFS":
-                            enemy_moves1 = dfs(back_to_org(maze),e1pos,ppos)
-                            enemy_moves2 = dfs(back_to_org(maze),e2pos,ppos)
+                            enemy1_moves = dfs(back_to_org(maze),e1pos,ppos)
+                            if rounds[0] > 1:
+                                e2pos = [enemy2.y,enemy2.x]
+                                enemy2_moves = dfs(back_to_org(maze),e2pos,ppos)
                         elif pathtype == "A*":
                             pass
-                        esteps1 = conv_to_moves(enemy_moves1)
-                        esteps2 = conv_to_moves(enemy_moves2)
+                        e1steps = conv_to_moves(enemy1_moves)
+                        if rounds[0] > 1:
+                            e2steps = conv_to_moves(enemy2_moves)
                         moved = False
                     
                     t2 = 0
@@ -204,8 +224,8 @@ def gamemode4(screen, mazetype, pathtype):
                     draw_maze(screen, maze)  ## draws maze
                     player.draw(screen)
                     enemy1.draw(screen)
-                    #if rounds[0]>1:
-                    enemy2.draw(screen)
+                    if rounds[0] > 1:
+                        enemy2.draw()
                     if maze[player.y][player.x] == "2" and rounds == []:  ## checks if player has reached goal
                         screen.fill(WHITE)
                         font = pygame.font.Font("freesansbold.ttf", 50)
@@ -220,10 +240,12 @@ def gamemode4(screen, mazetype, pathtype):
                 
                     
                     pygame.display.flip()
+            
                 
                 except:
                     pass
+            rounds.pop(0)
                 
        
    
-gamemode4(screen,"Backtracking","DFS")   
+gamemode4(screen,"Wilsons","DFS")
