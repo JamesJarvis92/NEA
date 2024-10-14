@@ -81,6 +81,9 @@ def backtracking_maze():
     return maze
 
 
+## remove some walls to make it work for enemies chasing
+
+
     
 
 
