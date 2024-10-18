@@ -1,11 +1,9 @@
 
 ## use queue to hold round numbers, time etc.
-## make new pathfinding
-## make new maze
+## make new pathfinding a*
 
 
-### sort crash when running second time
-### add buttons passed into optmenu - dont reset everytime
+### menu between rounds for g3
  
 
 
