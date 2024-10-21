@@ -90,7 +90,7 @@ def load_screen(screen):
 def two_player_mode(screen, mazetype):
     load_screen(screen)
     if mazetype == "Wilsons":
-        maze = WilsonsMazeGen(30) ## need to check maze is solvable with exit
+        maze = WilsonsMazeGen(30) 
     elif mazetype == "Backtracking":
         maze = backtracking_maze()
     player1 = Player(GREEN,[0,0])
