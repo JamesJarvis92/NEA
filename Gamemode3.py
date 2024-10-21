@@ -65,19 +65,22 @@ class Player:
     def draw(self, screen):
         pygame.draw.rect(screen, GREEN, (self.x * square_size, self.y * square_size, square_size, square_size))  ##  draws player
         
-def load_screen(screen):
+def round_screen(screen, roundnum):
     screen.fill(WHITE)
     font = pygame.font.Font("freesansbold.ttf", 50)
-    text = font.render("LOADING...",True,BLACK)
-    screen.blit(text,(200,300))
+    string = "Round " + str(roundnum) 
+    text = font.render(string,True,BLACK)
+    screen.blit(text,(300,300))
     pygame.display.flip()
 
 
 
 def gamemode3(screen,mazetype):
     zone_sizes = [10,8,6,4]
+    rounds = [1,2,3,4]
     for size in zone_sizes:
-        load_screen(screen)
+        roundnum = rounds[0]
+        round_screen(screen, roundnum)
         if mazetype == "Wilsons":
             maze = WilsonsMazeGen(30) ## need to check maze is solvable with exit
         elif mazetype == "Backtracking":
@@ -109,6 +112,7 @@ def gamemode3(screen,mazetype):
                 running = False
             pygame.display.flip()
         maze = []
+        rounds.pop(0)
         
 #screen = pygame.display.set_mode((swidth, sheight))
 

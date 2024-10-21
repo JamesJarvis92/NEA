@@ -132,16 +132,15 @@ def two_player_mode(screen, mazetype):
         pygame.display.flip()
         
     ## shows winner
-    try:
-        screen.fill(WHITE)
-        win_text = "Winner is player " + str(winner)
-        font1 = pygame.font.Font("freesansbold.ttf", 50)
-        text = font1.render(win_text,True,WHITE)
-        screen.blit(text,(200,300))
-        pygame.display.flip()    
-        t.sleep(1)
-    except:
-        pass
+    screen.fill(WHITE)
+    win_text = "Winner is player " + str(winner)
+    font1 = pygame.font.Font("freesansbold.ttf", 50)
+    text = font1.render(win_text,True,BLACK)
+    screen.blit(text,(200,300))
+    pygame.display.flip()    
+    t.sleep(1)
+    return None
+    
 
 
 

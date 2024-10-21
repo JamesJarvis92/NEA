@@ -1,10 +1,6 @@
 
 ## use queue to hold round numbers, time etc.
-## make new pathfinding a*
-
-
-### menu between rounds for g3
- 
+## make new pathfinding a* 
 
 
 from Gamemode1 import *
