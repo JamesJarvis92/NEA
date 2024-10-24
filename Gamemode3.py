@@ -1,6 +1,7 @@
 import pygame
 from Wilsons import *
 from Backtracking import *
+
 def pprint(maze):
     for i in range(len(maze)):
         print(maze[i])
