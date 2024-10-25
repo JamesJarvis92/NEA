@@ -1,6 +1,6 @@
 import pygame
-from Wilsons import *
-from Backtracking import *
+from Algorithms import Wilsons, Backtracking
+
 pygame.init()
 swidth = 720
 sheight = 720   ## change cell size based on size of mazes

@@ -1,7 +1,6 @@
 import pygame
-from Wilsons import *
-from Backtracking import *
-from DFS import *
+from Algorithms import *
+from DataStructures import *
 import time as t
 
 pygame.init()

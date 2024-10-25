@@ -1,4 +1,4 @@
-from stack import *
+from DataStructures import *
 
 maze = ["10000010",
         "10111010",

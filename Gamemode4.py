@@ -1,9 +1,8 @@
 import pygame
 import time as t
 import random
-from Wilsons import *
-from Backtracking import *
-from DFS import *
+from Algorithms import *
+from DataStructures import *
 ### make validator for maze and enemy start/ has path
 pygame.init()
 swidth = 720
