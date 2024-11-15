@@ -1,6 +1,7 @@
 import pygame
-from Algorithms import *
-from DataStructures import *
+from Backtracking import *
+from Wilsons import *
+
 
 def pprint(maze):
     for i in range(len(maze)):

@@ -1,5 +1,7 @@
 import pygame
-from Algorithms import Wilsons, Backtracking
+from Wilsons import *
+from Backtracking import *
+
 
 pygame.init()
 swidth = 720

@@ -1,5 +1,4 @@
 import random
-from DataStructures import *
 from CreateMaze import *
 import pygame
 import time

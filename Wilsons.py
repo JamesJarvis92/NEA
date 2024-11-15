@@ -1,4 +1,4 @@
-from DataStructures.stack import *
+from stack import *
 from CreateMaze import *
 import random
 ## install pygame by tools, python, python environment
