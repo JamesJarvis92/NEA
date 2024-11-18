@@ -36,7 +36,9 @@ class PQueue:
     
 
     def delete(self):
-        return self.queue.pop(0)
+          ####### could be wrong
+        data = self.queue.pop(0)
+        return data.data
     
     def size(self):
         return len(self.queue)
