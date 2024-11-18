@@ -4,7 +4,7 @@ import random
 from Backtracking import *
 from Wilsons import *
 from DFS import *
-from A_Star import *
+from A_star import *
 ### make validator for maze and enemy start/ has path
 pygame.init()
 swidth = 720
@@ -119,7 +119,7 @@ def gamemode4(screen, mazetype, pathtype):
                     if pathtype == "DFS":
                         enemy_moves = dfs(maze,[enemy1.y,enemy1.x],[player.y,player.x])
                     elif pathtype == "A*":
-                        pass
+                        enemy_moves = A_star(maze,[enemy1.y,enemy1.x],[player.y,player.x])
                     esteps = conv_to_moves(enemy_moves)
                     break
                 except:
@@ -179,7 +179,7 @@ def gamemode4(screen, mazetype, pathtype):
                         if pathtype == "DFS":
                             enemy_moves = dfs(back_to_org(maze),epos,ppos)
                         elif pathtype == "A*":
-                            pass
+                            enemy_moves = A_star(back_to_org(maze),epos,ppos)
                         esteps = conv_to_moves(enemy_moves)
                         moved = False
                     

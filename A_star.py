@@ -22,7 +22,7 @@ def conv_to_num_array(maze):
 
 def A_star(maze, start, end):
     maze = conv_to_num_array(maze)    ## convert to array for algorithm
-    print(maze)
+    #print(maze)
     snode = Node(None, start)      
     snode.g = snode.h = snode.f = 0    ## create start node
     enode = Node(None, end)

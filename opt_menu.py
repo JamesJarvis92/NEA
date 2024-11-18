@@ -63,10 +63,10 @@ def option_menu(screen,mazetype,pathtype):
         backtracking = optButton("Backtracking",[400,150],ORANGE,RED,BLACK,True)
     if pathtype == "DFS":
         dfs = optButton("DFS",[80,400],ORANGE,RED,BLACK,True)
-        path2 = optButton("Path 2",[400,400],ORANGE,RED,BLACK,False)
+        path2 = optButton("A star",[400,400],ORANGE,RED,BLACK,False)
     elif pathtype == "A*":
         dfs = optButton("DFS",[80,400],ORANGE,RED,BLACK,False)
-        path2 = optButton("Path 2",[400,400],ORANGE,RED,BLACK,True)
+        path2 = optButton("A star",[400,400],ORANGE,RED,BLACK,True)
     back_button = optButton("BACK",[230,600],ORANGE,RED,BLACK,True)
     while run:
         screen.fill("light blue")
