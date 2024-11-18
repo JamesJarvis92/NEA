@@ -4,6 +4,7 @@ import random
 from Backtracking import *
 from Wilsons import *
 from DFS import *
+from A_Star import *
 ### make validator for maze and enemy start/ has path
 pygame.init()
 swidth = 720

@@ -1,5 +1,7 @@
-class Node():
-    """A node class for A* Pathfinding"""
+
+
+
+class Node():    ## node class for keeping track of parents and h,g,f cost
 
     def __init__(self, parent=None, position=None):
         self.parent = parent
@@ -10,108 +12,110 @@ class Node():
         self.f = 0
 
     def __eq__(self, other):
-        return self.position == other.position
+        return self.position == other.position   ## used for comparing two instances of class
 
+def conv_to_num_array(maze):
+    nmaze = []
+    for row in maze:
+        line = []
+        for num in row:
+            line.append(int(num))
+        nmaze.append(line)
+    return nmaze
 
-def astar(maze, start, end):
-    """Returns a list of tuples as a path from the given start to the given end in the given maze"""
+def A_star(maze, start, end):
+    maze = conv_to_num_array(maze)    ## convert to array for algorithm
+    print(maze)
+    snode = Node(None, start)      
+    snode.g = snode.h = snode.f = 0    ## create start node
+    enode = Node(None, end)
+    enode.g = enode.h = enode.f = 0      ## create end node
+    list_of_open = []      ## make open/closed list
+    list_of_closed = []
+    list_of_open.append(snode)   ## add snode
 
-    # Create start and end node
-    start_node = Node(None, start)
-    start_node.g = start_node.h = start_node.f = 0
-    end_node = Node(None, end)
-    end_node.g = end_node.h = end_node.f = 0
-
-    # Initialize both open and closed list
-    open_list = []
-    closed_list = []
-
-    # Add the start node
-    open_list.append(start_node)
-
-    # Loop until you find the end
-    while len(open_list) > 0:
-
-        # Get the current node
-        current_node = open_list[0]
+    while len(list_of_open) > 0:    ## loop until end is found
+        current_node = list_of_open[0]    ## gets current node
         current_index = 0
-        for index, item in enumerate(open_list):
+        for index, item in enumerate(list_of_open):
             if item.f < current_node.f:
                 current_node = item
                 current_index = index
+        list_of_open.pop(current_index)       ## pop from open and add to closed
+        list_of_closed.append(current_node)
 
-        # Pop current off open list, add to closed list
-        open_list.pop(current_index)
-        closed_list.append(current_node)
-
-        # Found the goal
-        if current_node == end_node:
+        if current_node == enode:    ## check if finished
             path = []
             current = current_node
             while current is not None:
                 path.append(current.position)
                 current = current.parent
-            return path[::-1] # Return reversed path
+            return path[::-1]  ## returns path from start to end
 
-        # Generate children
         children = []
-        for new_position in [(0, -1), (0, 1), (-1, 0), (1, 0)]: # Adjacent squares
+        for new_position in [(0, -1), (0, 1), (-1, 0), (1, 0)]: ## moves around cell
+            node_position = (current_node.position[0] + new_position[0], current_node.position[1] + new_position[1])   ## find node position
+            if node_position[0] > (len(maze) - 1) or node_position[0] < 0 or node_position[1] > (len(maze[len(maze)-1]) -1) or node_position[1] < 0:   ## check node in maze
+                continue   ## skip rest of iteration 
+            if maze[node_position[0]][node_position[1]] != 1:   ## check cell is path
+                continue    ## skip rest of iteration
+            new_node = Node(current_node, node_position)   ## new node
+            children.append(new_node)  ## add new node to children
 
-            # Get node position
-            node_position = (current_node.position[0] + new_position[0], current_node.position[1] + new_position[1])
-
-            # Make sure within range
-            if node_position[0] > (len(maze) - 1) or node_position[0] < 0 or node_position[1] > (len(maze[len(maze)-1]) -1) or node_position[1] < 0:
-                continue
-
-            # Make sure walkable terrain
-            if maze[node_position[0]][node_position[1]] != 1:
-                continue
-
-            # Create new node
-            new_node = Node(current_node, node_position)
-
-            # Append
-            children.append(new_node)
-
-        # Loop through children
+        
         for child in children:
-
-            # Child is on the closed list
-            for closed_child in closed_list:
+            for closed_child in list_of_closed:    ## if child on closed list
                 if child == closed_child:
-                    continue
+                    continue   ## skip rest of iteration
 
-            # Create the f, g, and h values
-            child.g = current_node.g + 1
-            child.h = ((child.position[0] - end_node.position[0]) ** 2) + ((child.position[1] - end_node.position[1]) ** 2)
-            child.f = child.g + child.h
+            child.g = current_node.g + 1     ## set g val
+            child.h = ((child.position[0] - enode.position[0]) ** 2) + ((child.position[1] - enode.position[1]) ** 2)    ## set h val
+            child.f = child.g + child.h    ## set f val
 
-            # Child is already in the open list
-            for open_node in open_list:
-                if child == open_node and child.g > open_node.g:
-                    continue
+            for onode in list_of_open:    ## if child already on open list
+                if child == onode and child.g > onode.g:
+                    continue     ## skip rest of iteration
 
-            # Add the child to the open list
-            open_list.append(child)
+            list_of_open.append(child)   ## add child to open list
+    return False
+
+def conv_to_moves(moves):
+    steps = []
+    for i in range(len(moves)):
+        try:
+            ych = moves[i+1][0] - moves[i][0]
+        except:
+            pass
+        try:
+            xch = moves[i+1][1] - moves[i][1]
+        except:
+            pass
+        steps.append([ych,xch])
+    return steps
+
+"""
+maze = [[1,1,1,0,1,0,0],
+        [1,0,0,1,1,0,0],
+        [1,0,1,0,1,0,0],
+        [1,1,1,1,1,1,1],
+        [0,0,1,0,0,1,0],
+        [1,1,1,0,0,1,0],
+        [0,0,1,0,0,1,1]]
+"""
 
 
-def main():
+nmaze = ["1110100",
+         "1001100",
+         "1010100",
+         "1111111",
+         "0010010",
+         "1110010",
+         "0010011"]
+#print(conv_to_num_array(nmaze))
+start = (0, 0)
+end = (6, 6)
 
-    maze = [[1,1,1,0,1,0,0],
-            [1,0,0,1,1,0,0],
-            [1,0,1,0,1,0,0],
-            [1,1,1,1,1,1,1],
-            [0,0,1,0,0,1,0],
-            [1,1,1,0,0,1,0],
-            [0,0,1,0,0,1,1]]
-
-    start = (0, 0)
-    end = (6, 6)
-
-    path = astar(maze, start, end)
-    print(path)
+path = A_star(nmaze, start, end)
+print(conv_to_moves(path))
 
 
-if __name__ == '__main__':
-    main()
