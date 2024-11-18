@@ -1,38 +1,76 @@
-import heapq
-
-def dijkstra(maze, start, end):
-    rows, cols = len(maze), len(maze[0])
-    distances = { (i, j): float('inf') for i in range(rows) for j in range(cols) }
-    distances[start] = 0
-    priority_queue = [(0, start)]
-    directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
-
-    while priority_queue:
-        current_distance, current_position = heapq.heappop(priority_queue)
-        if current_position == end:
-            break
-        for direction in directions:
-            neighbor = (current_position[0] + direction[0], current_position[1] + direction[1])
-            if 0 <= neighbor[0] < rows and 0 <= neighbor[1] < cols and maze[neighbor[0]][neighbor[1]] == 0:
-                distance = current_distance + 1
-                if distance < distances[neighbor]:
-                    distances[neighbor] = distance
-                    heapq.heappush(priority_queue, (distance, neighbor))
-
-    return distances[end]
-
-# Example maze (0 = path, 1 = wall)
-maze = [
-    [0, 1, 0, 0, 0],
-    [0, 1, 0, 1, 0],
-    [0, 0, 0, 1, 0],
-    [0, 1, 1, 1, 0],
-    [0, 0, 0, 0, 0]
-]
-
-start = (0, 0)
-end = (4, 4)
-print("Shortest path length:", dijkstra(maze, start, end))
+from Priority_Queue import *
 
 
 
+
+
+maze = ["1000100",
+        "1000110",
+        "1010100",
+        "1111111",
+        "0010010",
+        "1110010",
+        "0010012"]
+
+
+#nodes = {(0,1):(0,0),(1,1):(0,1), (2,1):(1,1), (2,2):(2,1)}
+
+def dict_path_find(nodes, end_node):
+    path = []
+    node = nodes[end_node]
+    path.append(node)
+    while node != (0,0):
+        new_node = nodes[node]
+        path.append(new_node)
+        node = new_node
+    return path[::-1]
+
+#print(dict_path_find(nodes,(2,2)))
+
+def g_cost(nodes, node):
+    path_to_start = dict_path_find(nodes,node)
+    g = len(path_to_start)
+    return g
+
+#print(g_cost(nodes,(2,2)))
+
+def h_cost(node,end):
+    return (abs(node[0]-end[0]) + abs(node[1]-end[1]))
+
+#print(h_cost((2,2),(6,5)))
+
+def f_cost(nodes,node,end):
+    try:
+        g = g_cost(nodes,node)
+    except:
+        g = 0
+    try:
+        h = h_cost(node,end)
+    except:
+        h = 0
+    return g+h
+
+#print(f_cost(nodes,(2,2),(6,5)))
+
+def find_end(maze):
+    for i in range(len(maze)):
+        row = list(maze[i])
+        if "2" in row:
+            return (i,row.index("2"))
+        
+#print(find_end(maze))
+
+
+
+def A_star(maze, start, end):
+    nodes = {}
+    start = (start[0],start[1])
+    end = (end[0],end[1])
+    closed_list = []
+    open_list = []
+    node = start
+    path_found = False
+    PQ = PQueue()
+    while path_found == False:
+        f_cnode = f_cost(nodes, start, end)
+        
