@@ -2,7 +2,7 @@ import pygame
 from Backtracking import *
 from Wilsons import *
 from DFS import *
-
+from A_star import *
 import time as t
 
 pygame.init()
@@ -171,7 +171,7 @@ def computer_race(screen,mazetype, pathtype):
             if pathtype == "DFS":
                 enemy_moves = dfs(maze,[0,0],end)
             elif pathtype == "A*":
-                pass        ## add a star here
+                enemy_moves = A_star(maze,[0,0],end)        ## add a star here
             esteps = conv_to_moves(enemy_moves)
             player = Player(GREEN,[0,0])
             enemy1 = Player(GRAY,[0,0])

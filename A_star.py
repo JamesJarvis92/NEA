@@ -11,18 +11,22 @@ class Node():    ## node class for keeping track of parents and h,g,f cost
     def __eq__(self, other):
         return self.position == other.position   ## used for comparing two instances of class
 
-def conv_to_num_array(maze):
+def conv_to_num_array(maze):      ## turns into array of integers and changes end to a 1
     nmaze = []
     for row in maze:
         line = []
         for num in row:
-            line.append(int(num))
+            if num == "2":
+                line.append(1)
+            else:
+                line.append(int(num))
+            
         nmaze.append(line)
     return nmaze
 
 def A_star(maze, start, end):
     maze = conv_to_num_array(maze)    ## convert to array for algorithm
-    #print(maze)
+    print(maze)
     snode = Node(None, start)      
     snode.g = snode.h = snode.f = 0    ## create start node
     enode = Node(None, end)
@@ -32,7 +36,9 @@ def A_star(maze, start, end):
     list_of_open.append(snode)   ## add snode
 
     while len(list_of_open) > 0:    ## loop until end is found
+        
         current_node = list_of_open[0]    ## gets current node
+        #print(current_node.position)
         current_index = 0
         for index, item in enumerate(list_of_open):
             if item.f < current_node.f:
@@ -47,6 +53,7 @@ def A_star(maze, start, end):
             while current is not None:
                 path.append(current.position)
                 current = current.parent
+            print("done")
             return path[::-1]  ## returns path from start to end
 
         children = []
@@ -89,3 +96,19 @@ def conv_to_moves(moves):
             pass
         steps.append([ych,xch])
     return steps
+
+
+nmaze = ["1110100",
+         "1001100",
+         "1010100",
+         "1111111",
+         "0010010",
+         "1110010",
+         "0010011"]
+#print(conv_to_num_array(nmaze))
+start = (0, 0)
+end = (6, 6)
+
+path = A_star(nmaze, start, end)
+print(conv_to_moves(path))8
+
