@@ -34,7 +34,9 @@ class PQueue:
             l.append([i.data,i.priority])
         return l
     
-
+    def frontval(self):
+        return self.queue[0]
+    
     def delete(self):
           ####### could be wrong
         data = self.queue.pop(0)

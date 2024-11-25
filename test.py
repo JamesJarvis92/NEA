@@ -1,5 +1,9 @@
 
+##### find way to remove duplicates from pqueue #######   or just cut list after 50 vals or something
 
+
+from CreateMaze import *
+from Priority_Queue import *
 
 class Node():    ## node class for keeping track of parents and h,g,f cost
 
@@ -11,45 +15,56 @@ class Node():    ## node class for keeping track of parents and h,g,f cost
         self.h = 0
         self.f = 0
 
-    def __eq__(self, other):
-        return self.position == other.position   ## used for comparing two instances of class
+    #def __eq__(self, other):
+        #return self.position == other.position   ## used for comparing two instances of class
 
-def conv_to_num_array(maze):
+def conv_to_num_array(maze):      ## turns into array of integers and changes end to a 1
     nmaze = []
     for row in maze:
         line = []
         for num in row:
-            line.append(int(num))
+            if num == "2":
+                line.append(1)
+            else:
+                line.append(int(num))
+            
         nmaze.append(line)
     return nmaze
 
 def A_star(maze, start, end):
     maze = conv_to_num_array(maze)    ## convert to array for algorithm
-    print(maze)
+    pprint(maze)
+    print(start,end)
     snode = Node(None, start)      
     snode.g = snode.h = snode.f = 0    ## create start node
     enode = Node(None, end)
     enode.g = enode.h = enode.f = 0      ## create end node
-    list_of_open = []      ## make open/closed list
+    list_of_open = PQueue()     ## make open/closed list
     list_of_closed = []
-    list_of_open.append(snode)   ## add snode
+    snode = Builder(snode,snode.f)
+    list_of_open.insert(snode)   ## add snode
 
-    while len(list_of_open) > 0:    ## loop until end is found
-        current_node = list_of_open[0]    ## gets current node
+    while list_of_open.size() > 0:    ## loop until end is found
+        
+        
+        current_node = list_of_open.frontval()    ## gets current node
+        #print(current_node.position)
         current_index = 0
-        for index, item in enumerate(list_of_open):
-            if item.f < current_node.f:
-                current_node = item
-                current_index = index
-        list_of_open.pop(current_index)       ## pop from open and add to closed
+        #list_of_open = list_of_open[:50]
+        print(list_of_open.size())
+        current_node = list_of_open.delete()
+        print(current_node.position)
+        
+        #print("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
         list_of_closed.append(current_node)
 
-        if current_node == enode:    ## check if finished
+        if current_node.position == enode.position:    ## check if finished
             path = []
             current = current_node
             while current is not None:
                 path.append(current.position)
                 current = current.parent
+            print("done")
             return path[::-1]  ## returns path from start to end
 
         children = []
@@ -72,11 +87,11 @@ def A_star(maze, start, end):
             child.h = ((child.position[0] - enode.position[0]) ** 2) + ((child.position[1] - enode.position[1]) ** 2)    ## set h val
             child.f = child.g + child.h    ## set f val
 
-            for onode in list_of_open:    ## if child already on open list
+            for onode in list_of_open.getlist():    ## if child already on open list
                 if child == onode and child.g > onode.g:
                     continue     ## skip rest of iteration
-
-            list_of_open.append(child)   ## add child to open list
+            nnode = Builder(child, child.f)
+            list_of_open.insert(nnode)   ## add child to open list
     return False
 
 def conv_to_moves(moves):
@@ -94,28 +109,65 @@ def conv_to_moves(moves):
     return steps
 
 """
-maze = [[1,1,1,0,1,0,0],
-        [1,0,0,1,1,0,0],
-        [1,0,1,0,1,0,0],
-        [1,1,1,1,1,1,1],
-        [0,0,1,0,0,1,0],
-        [1,1,1,0,0,1,0],
-        [0,0,1,0,0,1,1]]
+nmaze = [[1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1],
+[0, 0, 1, 0, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 1],
+[1, 0, 1, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0],
+[1, 0, 1, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1],
+[0, 1, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 1, 1, 1],
+[0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+[0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1],
+[0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0],
+[0, 1, 0, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 1],
+[0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 1],
+[0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1],
+[0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0],
+[1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0],
+[0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1],
+[0, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 0, 1],
+[0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1],
+[0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1],
+[0, 1, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1],
+[0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0, 1],
+[0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1],
+[0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1],
+[0, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0],
+[1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1],
+[1, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 1],
+[1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1],
+[1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1],
+[0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0],
+[1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 1],
+[1, 0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1],
+[1, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1]]
 """
 
+nmaze = [[1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    [1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    [1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    [1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    [1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    [1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    [1,1,0,1,1,0,1,1,1,1,1,1,1,1,1,1],
+    [1,1,0,1,0,1,1,1,1,1,1,1,1,1,1,1],
+    [1,1,0,1,0,1,1,1,1,1,1,1,1,1,1,1],
+    [1,1,0,1,0,1,0,1,1,1,1,1,1,1,1,1],
+    [1,1,0,1,1,1,0,1,1,1,1,1,1,1,1,1],
+    [1,1,0,1,0,1,0,1,1,1,1,1,1,1,1,1],
+    [1,1,1,1,0,1,0,1,1,1,1,1,1,1,1,1]]
 
-nmaze = ["1110100",
-         "1001100",
-         "1010100",
-         "1111111",
-         "0010010",
-         "1110010",
-         "0010011"]
+nmaze = [[1,0,1,1,1],
+         [1,0,1,0,1],
+         [1,1,1,0,1],
+         [1,1,1,0,1],
+         [1,1,1,0,1]]
+         
 #print(conv_to_num_array(nmaze))
 start = (0, 0)
-end = (6, 6)
+end = (4, 4)
 
 path = A_star(nmaze, start, end)
-print(conv_to_moves(path))
+print(path)
+#print(conv_to_moves(path))
+
 
 
