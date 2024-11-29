@@ -171,7 +171,10 @@ def computer_race(screen,mazetype, pathtype):
             if pathtype == "DFS":
                 enemy_moves = dfs(maze,[0,0],end)
             elif pathtype == "A*":
-                enemy_moves = A_star(maze,[0,0],end)        ## add a star here
+                print(maze)
+                enemy_moves = A_star(maze,[0,0],end)
+                print(end)
+                print(enemy_moves)
             esteps = conv_to_moves(enemy_moves)
             player = Player(GREEN,[0,0])
             enemy1 = Player(GRAY,[0,0])

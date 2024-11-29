@@ -32,14 +32,26 @@ def conv_to_num_array(maze):      ## turns into array of integers and changes en
     return nmaze
 
 def A_star(maze, start, end):
+    try:
+        start.append("x")
+        start = (start[0],start[1])
+    except:
+        pass
+    try:
+        end.append("x")
+        end = (end[0],end[1])
+    except:
+        pass
+    positions_in_open = []
     maze = conv_to_num_array(maze)    ## convert to array for algorithm
-    pprint(maze)
-    print(start,end)
+    #pprint(maze)
+    #print(start,end)
     snode = Node(None, start)      
     snode.g = snode.h = snode.f = 0    ## create start node
     enode = Node(None, end)
     enode.g = enode.h = enode.f = 0      ## create end node
     list_of_open = PQueue()     ## make open/closed list
+    positions_in_open.append(snode.position)
     list_of_closed = []
     snode = Builder(snode,snode.f)
     list_of_open.insert(snode)   ## add snode
@@ -51,9 +63,9 @@ def A_star(maze, start, end):
         #print(current_node.position)
         current_index = 0
         #list_of_open = list_of_open[:50]
-        print(list_of_open.size())
+        #print(list_of_open.size())
         current_node = list_of_open.delete()
-        print(current_node.position)
+        #print(current_node.position)
         
         #print("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
         list_of_closed.append(current_node)
@@ -64,7 +76,7 @@ def A_star(maze, start, end):
             while current is not None:
                 path.append(current.position)
                 current = current.parent
-            print("done")
+            #print("done")
             return path[::-1]  ## returns path from start to end
 
         children = []
@@ -91,7 +103,11 @@ def A_star(maze, start, end):
                 if child == onode and child.g > onode.g:
                     continue     ## skip rest of iteration
             nnode = Builder(child, child.f)
-            list_of_open.insert(nnode)   ## add child to open list
+            if nnode.data.position not in positions_in_open:
+                list_of_open.insert(nnode)   ## add child to open list
+                positions_in_open.append(nnode.data.position)
+            else:
+                pass
     return False
 
 def conv_to_moves(moves):
@@ -108,7 +124,7 @@ def conv_to_moves(moves):
         steps.append([ych,xch])
     return steps
 
-"""
+
 nmaze = [[1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1],
 [0, 0, 1, 0, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 1],
 [1, 0, 1, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0],
@@ -139,8 +155,8 @@ nmaze = [[1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1
 [1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 1],
 [1, 0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1],
 [1, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1]]
-"""
 
+"""
 nmaze = [[1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1],
     [1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1],
     [1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1],
@@ -160,14 +176,44 @@ nmaze = [[1,0,1,1,1],
          [1,1,1,0,1],
          [1,1,1,0,1],
          [1,1,1,0,1]]
-         
+    """     
+nmaze = ["101000011000001111100000001011",
+"101000010011100011001111101010",
+"101011110010101101001000111011",
+"101110001110101001001110100001",
+"110101111010101001111001101111",
+"011110010010001010101001001010",
+"011010010011111011111001100110",
+"101100000101001000010010000111",
+"111111111111101000101010110100",
+"011110000010101011101111100111",
+"001011000110101110011101111101",
+"001101110010100011110101100100",
+"110011000111100010010000100110",
+"011011110101001110011111100010",
+"001111011001001011000010011011",
+"001001001110011000100110101001",
+"001001100001111011111100111001",
+"001010111111001001000001101001",
+"101110010100000011101100011001",
+"111101110101110010100101111110",
+"000101000000110010111110010010",
+"011011111110100000101101010010",
+"111010010011111111100101010010",
+"111110010000100000000101110010",
+"100010011100100100110111000020",
+"011111100011110101100100111110",
+"010010111010011111110101100100",
+"010000100011000100010100000111",
+"011101110001110111010111111001",
+"110111011111011001010000001101"]
 #print(conv_to_num_array(nmaze))
-start = (0, 0)
-end = (4, 4)
+start = [0, 0]
+end = [24, 28]
 
 path = A_star(nmaze, start, end)
 print(path)
-#print(conv_to_moves(path))
+print(conv_to_moves(path))
 
 
 
