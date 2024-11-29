@@ -28,20 +28,18 @@ def conv_to_num_array(maze):      ## turns into array of integers and changes en
     return nmaze
 
 def A_star(maze, start, end):
-    try:
-        start.append("x")
-        start = (start[0],start[1])
+    try:                         ## checks both start and end are passed in as tuples
+        start.append("x")        ## shows input is list because it can be appended to
+        start = (start[0],start[1])    ## changes to tuple
     except:
-        pass
-    try:
+        pass      ## already a tuple so can't be appended to and skips try
+    try:                 ##repeated for end
         end.append("x")
         end = (end[0],end[1])
     except:
         pass
     positions_in_open = []
     maze = conv_to_num_array(maze)    ## convert to array for algorithm
-    #pprint(maze)
-    #print(start,end)
     snode = Node(None, start)      
     snode.g = snode.h = snode.f = 0    ## create start node
     enode = Node(None, end)
@@ -53,17 +51,9 @@ def A_star(maze, start, end):
     list_of_open.insert(snode)   ## add snode
 
     while list_of_open.size() > 0:    ## loop until end is found
-        
-        
         current_node = list_of_open.frontval()    ## gets current node
-        #print(current_node.position)
         current_index = 0
-        #list_of_open = list_of_open[:50]
-        #print(list_of_open.size())
         current_node = list_of_open.delete()
-        #print(current_node.position)
-        
-        #print("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
         list_of_closed.append(current_node)
 
         if current_node.position == enode.position:    ## check if finished
@@ -72,7 +62,6 @@ def A_star(maze, start, end):
             while current is not None:
                 path.append(current.position)
                 current = current.parent
-            #print("done")
             return path[::-1]  ## returns path from start to end
 
         children = []
@@ -85,7 +74,6 @@ def A_star(maze, start, end):
             new_node = Node(current_node, node_position)   ## new node
             children.append(new_node)  ## add new node to children
 
-        
         for child in children:
             for closed_child in list_of_closed:    ## if child on closed list
                 if child == closed_child:
