@@ -11,9 +11,6 @@ class Node():    ## node class for keeping track of parents and h,g,f cost
         self.h = 0
         self.f = 0
 
-    #def __eq__(self, other):
-        #return self.position == other.position   ## used for comparing two instances of class
-
 def conv_to_num_array(maze):      ## turns into array of integers and changes end to a 1
     nmaze = []
     for row in maze:
