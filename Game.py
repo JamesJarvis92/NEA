@@ -96,7 +96,7 @@ while run:
         gamemode4(screen, var[0],var[1])
     if optbutton.check_clicked():
         var = option_menu(screen,var[0],var[1])   ## [maze,path]
-        print(var)
+        #print(var)
    
     
     for event in pygame.event.get():

@@ -45,7 +45,7 @@ def load_screen(screen):
     screen.blit(text,(200,300))
     pygame.display.flip()
     
-screen = pygame.display.set_mode((swidth, sheight))
+#screen = pygame.display.set_mode((swidth, sheight))
 
 def gamemode1(screen, mazetype):
     len_of_time = 4
