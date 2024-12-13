@@ -1,7 +1,6 @@
 from stack import *
 from CreateMaze import *
 import random
-## install pygame by tools, python, python environment
 
 def is_connected_to_maze(maze,pos):
     connected = False
@@ -39,7 +38,7 @@ def select_start(maze):
     return "END" ## returns if no node is found
 
 
-def in_maze(maze,pos):
+def in_maze(maze,pos):    ## checks in maze
     try:
         x = maze[pos[0]][pos[1]]
         if pos[0]>=0 and pos[1]>=0:

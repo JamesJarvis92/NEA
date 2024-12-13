@@ -45,7 +45,7 @@ def load_screen(screen):
     screen.blit(text,(200,300))
     pygame.display.flip()
     
-#screen = pygame.display.set_mode((swidth, sheight))
+
 
 def gamemode1(screen, mazetype):
     len_of_time = 4
@@ -54,18 +54,16 @@ def gamemode1(screen, mazetype):
     if mazetype == "Wilsons":
         maze = WilsonsMazeGen(30) ## need to check maze is solvable with exit
     elif mazetype == "Backtracking":
-        #print("iwucb")
         pygame.event.get()
-        #print("zzzzzz")
         maze = backtracking_maze()
         
     player = Player()
     running = True
     won = False
     ctime = 0
-    timer = pygame.time.Clock()
+    timer = pygame.time.Clock()   ## initialises timer
     while running:
-        for event in pygame.event.get():
+        for event in pygame.event.get():    ## loop through events
             if event.type == pygame.QUIT:
                 running = False
             elif event.type == pygame.KEYDOWN:    ## does movements 
@@ -81,20 +79,20 @@ def gamemode1(screen, mazetype):
                     return None
         timer.tick()
         font = pygame.font.Font("freesansbold.ttf", 50)
-        ctime  += ((timer.get_time())/1000)
+        ctime  += ((timer.get_time())/1000)   ## increments timer
         if ctime> 10:
             len_of_time = 5
         screen.fill(WHITE)     ## when finished
         draw_maze(screen, maze)  ## draws maze
         player.draw(screen)
-        text2 = font.render(str(ctime)[:len_of_time],True,WHITE)
-        screen.blit(text2,(300,300))
+        text2 = font.render(str(ctime)[:len_of_time],True,WHITE)   ## shows timer
+        screen.blit(text2,(300,300))   ## draws text on top
         if maze[player.y][player.x] == "2":  ## checks if player has reached goal
             won = True
             running = False
-            screen.fill(WHITE)
+            screen.fill(WHITE)   ## displays victory screen
             font1 = pygame.font.Font("freesansbold.ttf", 30)
-            win_string = "You took " + str(ctime)[:len_of_time] + " seconds to complete the maze"
+            win_string = "You took " + str(ctime)[:len_of_time] + " seconds to complete the maze"   ## win text
             text = font1.render(win_string,True,BLACK)
             screen.blit(text,(40,300))
             pygame.display.flip()

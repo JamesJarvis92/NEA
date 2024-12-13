@@ -2,7 +2,6 @@ import pygame
 pygame.init()
 font = pygame.font.Font("freesansbold.ttf", 24)
 bfont = pygame.font.Font("freesansbold.ttf", 50)
-#screen.fill("light blue")
 pygame.display.set_caption("Maze Game")
 fps = 60
 timer = pygame.time.Clock()
@@ -101,7 +100,5 @@ def option_menu(screen,mazetype,pathtype):
                 time.sleep(0.1)
                 return [maze,pathfinding]
                     
-        #time.sleep(1)
-#screen = pygame.display.set_mode([720,720])
-#print(option_menu(screen))
+
 pygame.quit()

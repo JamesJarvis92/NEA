@@ -134,7 +134,7 @@ def backtracking_maze():
     maze[0][0] = "1"
     maze = make_maze(0,0)
     maze = backtrack_add_end(maze)
-    ### remove squares here so dont have to separate rows
+    ## remove squares here so dont have to separate rows
     maze = join_maze(maze)
     return maze
 
