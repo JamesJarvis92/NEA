@@ -151,6 +151,8 @@ def gen_info():
         time = (5-i)*100
         times.enqueue(time)
         rounds.enqueue(str(i+1))
+        times.seequeue()
+        rounds.seequeue()
     return times, rounds
 
 
@@ -161,6 +163,7 @@ def computer_race(screen,mazetype, pathtype):
     end = False
     screen = pygame.display.set_mode((swidth, sheight))  ## initialises screen
     for i in range(5):
+        print(i)
         time = times.dequeue()
         roun = rounds.dequeue()
         print(time, roun)
@@ -192,7 +195,7 @@ def computer_race(screen,mazetype, pathtype):
             timer = pygame.time.Clock()
             ms = 0
             esteps.pop(-1)
-            while running:
+            while running: 
                 emove = 0
                 ms += timer.get_time()  ## add time since last tick to ms
                 for event in pygame.event.get():
@@ -251,7 +254,6 @@ def computer_race(screen,mazetype, pathtype):
 
     
 def gamemode2(screen, mazetype, pathtype):
-    #screen = pygame.display.set_mode([720,720])
     run = True
     while run:
         screen.fill("light blue")

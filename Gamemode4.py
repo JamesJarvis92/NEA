@@ -1,15 +1,14 @@
-import pygame
+import pygame             ## import files, settings, colours
 import time as t
 import random
 from Backtracking import *
 from Wilsons import *
 from DFS import *
 from A_star import *
-### make validator for maze and enemy start/ has path
 pygame.init()
 swidth = 720
-sheight = 720   ## change cell size based on size of mazes
-square_size = 24 ## need to calculate this based on maze size or just have set sizes for game modes
+sheight = 720   
+square_size = 24 
 mwidth = swidth // square_size
 mheight = sheight // square_size 
 WHITE = (255, 255, 255)
@@ -18,7 +17,7 @@ GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 GRAY = (192, 192, 192)
 
-def draw_maze(screen, maze):
+def draw_maze(screen, maze):       ## draw maze
     for y in range(mheight):
         for x in range(mwidth):
             if maze[y][x] == "0":
@@ -26,7 +25,7 @@ def draw_maze(screen, maze):
             elif maze[y][x] == "1":
                 pygame.draw.rect(screen, RED, (x * square_size, y * square_size, square_size, square_size)) ## draws walls
             elif maze[y][x] == "x":
-                pygame.draw.rect(screen, RED, (x * square_size, y * square_size, square_size, square_size))
+                pygame.draw.rect(screen, RED, (x * square_size, y * square_size, square_size, square_size))   ## draws paths
 
 
 class Player:
@@ -44,34 +43,18 @@ class Player:
         else:
             return False
 
-    def draw(self, screen):
+    def draw(self, screen):  ## draws player
         pygame.draw.rect(screen, self.color, (self.x * square_size, self.y * square_size, square_size, square_size))  ##  draws player
         
         
-def load_screen(screen):
+def load_screen(screen):   ## draws loading screen
     screen.fill(WHITE)
     font = pygame.font.Font("freesansbold.ttf", 50)
     text = font.render("LOADING...",True,BLACK)
     screen.blit(text,(200,300))
     pygame.display.flip()
     
-screen = pygame.display.set_mode((swidth, sheight))
-
-maze = ["x0000010",
-        "x0111010",
-        "10001010",
-        "11111110",
-        "10010010",
-        "11111010",
-        "10000010",
-        "11002110"]
-
-
-def pprint(maze):
-    for i in range(len(maze)):
-        print(maze[i])
-
-def back_to_org(maze):
+def back_to_org(maze):    ## converts maze back to original format
     nmaze = []
     for row in maze:
         nrow = ""
@@ -83,7 +66,7 @@ def back_to_org(maze):
         nmaze.append(nrow)
     return nmaze
 
-def find_enemy_start(maze):
+def find_enemy_start(maze):   ## finds start position enemy randomly from list of possible positions
     starts = [[0,25],[0,26],[0,27],[0,28],[1,25],[1,26],[1,27],[1,28],[2,25],[2,26],[2,27],[2,28],[25,0],[26,0],[27,0],[28,0],[25,1],[26,1],[27,1],[28,1],[25,2],[26,2],[27,2],[28,2]]
     while True:
         start = random.choice(starts)
@@ -97,7 +80,7 @@ def gamemode4(screen, mazetype, pathtype):
     screen = pygame.display.set_mode((swidth, sheight))  ## initialises screen
     for time in times:
         if lost == False:
-            screen.fill(WHITE)
+            screen.fill(WHITE)    ## round number screen
             font = pygame.font.Font("freesansbold.ttf", 50)
             string = "Round " + rounds[0]
             text = font.render(string,True,BLACK)
@@ -107,20 +90,19 @@ def gamemode4(screen, mazetype, pathtype):
             rounds.pop(0)
             while True:
                 try:
-                    if mazetype == "Wilsons":
-                        maze = WilsonsMazeGen(30) ## need to check maze is solvable with exit
+                    if mazetype == "Wilsons": ## generates maze
+                        maze = WilsonsMazeGen(30) 
                     elif mazetype == "Backtracking":
                         maze = backtracking_maze()
-                    
-                    end = find_end(maze)
-                    estart = find_enemy_start(maze)
-                    player = Player(GREEN,[0,0])
+                    end = find_end(maze)    ## finds end of maze
+                    estart = find_enemy_start(maze)   ## finds enemy start position
+                    player = Player(GREEN,[0,0])   ## initialises player, enemy
                     enemy1 = Player(GRAY, estart)   
-                    if pathtype == "DFS":
+                    if pathtype == "DFS":    ## find enemy path
                         enemy_moves = dfs(maze,[enemy1.y,enemy1.x],[player.y,player.x])
                     elif pathtype == "A*":
                         enemy_moves = A_star(maze,[enemy1.y,enemy1.x],[player.y,player.x])
-                    esteps = conv_to_moves(enemy_moves)
+                    esteps = conv_to_moves(enemy_moves)   ## change enemy path to steps
                     break
                 except:
                     pass
@@ -152,8 +134,8 @@ def gamemode4(screen, mazetype, pathtype):
                             moved = True
                         elif event.key == pygame.K_ESCAPE:
                             return None
-                if [player.x,player.y] == [enemy1.x,enemy1.y]:
-                    screen.fill(WHITE)
+                if [player.x,player.y] == [enemy1.x,enemy1.y]:  ## checks if enemy is on player
+                    screen.fill(WHITE)  ## loss screen
                     font = pygame.font.Font("freesansbold.ttf", 50)
                     text = font.render("You lost :(",True,BLACK)
                     screen.blit(text,(200,300))
@@ -176,11 +158,11 @@ def gamemode4(screen, mazetype, pathtype):
                     if moved:
                         ppos = [player.y,player.x]
                         epos = [enemy1.y,enemy1.x]
-                        if pathtype == "DFS":
+                        if pathtype == "DFS":    ## recalculates enemy path once player has moved
                             enemy_moves = dfs(back_to_org(maze),epos,ppos)
                         elif pathtype == "A*":
                             enemy_moves = A_star(back_to_org(maze),epos,ppos)
-                        esteps = conv_to_moves(enemy_moves)
+                        esteps = conv_to_moves(enemy_moves)   ## changes path to steps
                         moved = False
                     
                     t2 = 0
@@ -192,8 +174,8 @@ def gamemode4(screen, mazetype, pathtype):
                     draw_maze(screen, maze)  ## draws maze
                     player.draw(screen)
                     enemy1.draw(screen)
-                    if maze[player.y][player.x] == "2" and rounds == []:  ## checks if player has reached goal
-                        screen.fill(WHITE)
+                    if maze[player.y][player.x] == "2" and rounds == []:  ## checks if player has reached goal of final round
+                        screen.fill(WHITE)  ## win screen
                         font = pygame.font.Font("freesansbold.ttf", 50)
                         text = font.render("You won :)",True,BLACK)
                         screen.blit(text,(200,300))

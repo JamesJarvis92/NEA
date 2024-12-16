@@ -1,16 +1,10 @@
-import pygame
+import pygame    ## import files and settings,colours
 from Backtracking import *
 from Wilsons import *
-
-
-def pprint(maze):
-    for i in range(len(maze)):
-        print(maze[i])
-        
 pygame.init()
 swidth = 720
-sheight = 720   ## change cell size based on size of mazes
-square_size = 24 ## need to calculate this based on maze size or just have set sizes for game modes
+sheight = 720   
+square_size = 24 
 mwidth = swidth // square_size
 mheight = sheight // square_size 
 WHITE = (255, 255, 255)
@@ -44,7 +38,7 @@ def conv_maze(zone_size,maze,player_pos):   ## changes maze to zone around playe
 
 
 
-def draw_maze(screen, maze):
+def draw_maze(screen, maze):   ## draws maze
     for y in range(mheight):
         for x in range(mwidth):
             if maze[y][x] == "0":
@@ -67,7 +61,7 @@ class Player:
     def draw(self, screen):
         pygame.draw.rect(screen, GREEN, (self.x * square_size, self.y * square_size, square_size, square_size))  ##  draws player
         
-def round_screen(screen, roundnum):
+def round_screen(screen, roundnum):    ## draws round screen
     screen.fill(WHITE)
     font = pygame.font.Font("freesansbold.ttf", 50)
     string = "Round " + str(roundnum) 
@@ -83,8 +77,8 @@ def gamemode3(screen,mazetype):
     for size in zone_sizes:
         roundnum = rounds[0]
         round_screen(screen, roundnum)
-        if mazetype == "Wilsons":
-            maze = WilsonsMazeGen(30) ## need to check maze is solvable with exit
+        if mazetype == "Wilsons":     ## generates maze
+            maze = WilsonsMazeGen(30) 
         elif mazetype == "Backtracking":
             maze = backtracking_maze()
         player = Player()

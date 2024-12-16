@@ -30,6 +30,7 @@ class Queue:     ## data structure
       self.queue[self.rear] = data
       
   def dequeue(self):   ## removes front value
-    return self.queue[self.front] ## linear queue so just need to move front back instead of shift all forward
     self.front += 1
+    return self.queue[self.front-1] ## linear queue so just need to move front back instead of shift all forward
+    
       
