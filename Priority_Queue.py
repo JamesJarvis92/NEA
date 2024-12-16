@@ -1,9 +1,9 @@
-class Builder:
+class Builder:    ##  nodes for priority queue
     def __init__(self,data,priority):
         self.data = data
         self.priority = priority
         
-class PQueue:
+class PQueue:     ## data structure
     def __init__(self):
         self.queue = list()
         
@@ -14,35 +14,34 @@ class PQueue:
                 self.queue.append(node)
                 inserted = True
         else:
-            for i in range(0,self.size()):
+            for i in range(0,self.size()):     ## loops until it finds valid position for new node
                 if node.priority >= self.queue[i].priority:
                     if i == (self.size()-1):
                         if inserted == False:
-                            self.queue.insert(i+1, node)
+                            self.queue.insert(i+1, node)    ## inserts and changes insert to true
                             inserted = True
                     else:
                         pass
                 else:
-                    if inserted == False:
+                    if inserted == False:   ## adds to end of queue
                         self.queue.insert(i, node)
                         inserted = True
     
 
-    def getlist(self):
+    def getlist(self):    ## returns list of data and their priorities
         l = []
         for i in self.queue:
             l.append([i.data,i.priority])
         return l
     
-    def frontval(self):
+    def frontval(self):      ## gets front value
         return self.queue[0]
     
-    def delete(self):
-          ####### could be wrong
+    def delete(self):      ## returns data at front and removes 
         data = self.queue.pop(0)
         return data.data
     
-    def size(self):
+    def size(self):    ## size of queue
         return len(self.queue)
 """    
 b1 = Builder("C",3)

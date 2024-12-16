@@ -61,7 +61,7 @@ def gamemode1(screen, mazetype):
     running = True
     won = False
     ctime = 0
-    timer = pygame.time.Clock()
+    timer = pygame.time.Clock()   ## initialises timer
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:  ## checks if game has been quit
@@ -85,14 +85,14 @@ def gamemode1(screen, mazetype):
         screen.fill(WHITE)     ## when finished
         draw_maze(screen, maze)  ## draws maze
         player.draw(screen)
-        text2 = font.render(str(ctime)[:len_of_time],True,WHITE)
-        screen.blit(text2,(300,300))
+        text2 = font.render(str(ctime)[:len_of_time],True,WHITE)   ## shows timer
+        screen.blit(text2,(300,300))   ## draws text on top
         if maze[player.y][player.x] == "2":  ## checks if player has reached goal
             won = True          ## displays win screen
             running = False       
             screen.fill(WHITE)
             font1 = pygame.font.Font("freesansbold.ttf", 30)
-            win_string = "You took " + str(ctime)[:len_of_time] + " seconds to complete the maze"
+            win_string = "You took " + str(ctime)[:len_of_time] + " seconds to complete the maze"   ## win text
             text = font1.render(win_string,True,BLACK)
             screen.blit(text,(40,300))
             pygame.display.flip()

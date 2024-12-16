@@ -11,7 +11,7 @@ sheight = 720   ## change cell size based on size of mazes
 square_size = 24 ## need to calculate this based on maze size or just have set sizes for game modes
 mwidth = swidth // square_size
 mheight = sheight // square_size 
-WHITE = (255, 255, 255)
+WHITE = (255, 255, 255)   ## colour values etc
 BLACK = (0, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = ((0,0,255))
@@ -30,26 +30,26 @@ class Button:
         self.textcol = textcol
         self.button = pygame.rect.Rect((self.pos[0],self.pos[1]),(260,40))
     
-    def draw(self,screen):
+    def draw(self,screen):    ## draws button
         btn = pygame.draw.rect(screen, self.mcol, self.button,0,5)
         pygame.draw.rect(screen, self.ocol, self.button,5,5)
         font = pygame.font.Font("freesansbold.ttf", 24)
         text = font.render(self.text,True,self.textcol)
         screen.blit(text,(self.pos[0]+15,self.pos[1]+7))
         
-    def check_clicked(self):
+    def check_clicked(self):   ## checks if button clicked
         if self.button.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0]:
             return True
         else:
             return False
         
-    def hovering(self):
+    def hovering(self):    ## checks if mouse hovering
         if (self.button).collidepoint(pygame.mouse.get_pos()):
             temp = self.mcol
             self.mcol = self.ocol
             self.ocol = temp
         
-def draw_maze(screen, maze):
+def draw_maze(screen, maze):    ## draws maze as grid of squares
     for y in range(mheight):
         for x in range(mwidth):
             if maze[y][x] == "0":
@@ -61,7 +61,7 @@ def draw_maze(screen, maze):
 
 
 
-class Player:
+class Player:   ## player class
     def __init__(self,color,pos):
         self.color = color
         self.x = pos[1]
@@ -79,7 +79,7 @@ class Player:
     def draw(self, screen):
         pygame.draw.rect(screen, self.color, (self.x * square_size, self.y * square_size, square_size, square_size))  ##  draws player
         
-def load_screen(screen):
+def load_screen(screen):   ## loading screen
     screen.fill(WHITE)
     font1 = pygame.font.Font("freesansbold.ttf", 50)
     text = font1.render("LOADING...",True,BLACK)
@@ -90,14 +90,14 @@ def load_screen(screen):
 
 def two_player_mode(screen, mazetype):
     load_screen(screen)
-    if mazetype == "Wilsons":
+    if mazetype == "Wilsons":   ## generates chosen maze 
         maze = WilsonsMazeGen(30) 
     elif mazetype == "Backtracking":
         maze = backtracking_maze()
-    player1 = Player(GREEN,[0,0])
+    player1 = Player(GREEN,[0,0])  ## initialise both players
     player2 = Player(BLUE,[0,0])
     running = True
-    while running:
+    while running:   ## run game loop
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -118,7 +118,7 @@ def two_player_mode(screen, mazetype):
                     player2.move(-1, 0, maze)
                 elif event.key == pygame.K_d:
                     player2.move(1, 0, maze)
-                elif event.key == pygame.K_ESCAPE:
+                elif event.key == pygame.K_ESCAPE:   ## escape key to exit
                     return None
         screen.fill(WHITE)     ## when finished
         draw_maze(screen, maze)  ## draws maze
@@ -151,7 +151,7 @@ def computer_race(screen,mazetype, pathtype):
     rounds = ["1","2","3","4","5"]
     end = False
     screen = pygame.display.set_mode((swidth, sheight))  ## initialises screen
-    for time in times:
+    for time in times:  ## loop for each round
         if end == True:
             break
         if lost == False:
@@ -168,12 +168,12 @@ def computer_race(screen,mazetype, pathtype):
                 maze = backtracking_maze()
             t.sleep(1)
             end = find_end(maze)
-            if pathtype == "DFS":
+            if pathtype == "DFS":   ## generates path using chosen method
                 enemy_moves = dfs(maze,[0,0],end)
             elif pathtype == "A*":
                 enemy_moves = A_star(maze,[0,0],end)
-            esteps = conv_to_moves(enemy_moves)
-            player = Player(GREEN,[0,0])
+            esteps = conv_to_moves(enemy_moves)   ## changes to moves
+            player = Player(GREEN,[0,0])   ## initialises player, enemy
             enemy1 = Player(GRAY,[0,0])
             running = True
             won = False
@@ -214,14 +214,14 @@ def computer_race(screen,mazetype, pathtype):
                 player.draw(screen)
                 enemy1.draw(screen)
                 if maze[player.y][player.x] == "2" and rounds == []:  ## checks if player has reached goal
-                    screen.fill(WHITE)
+                    screen.fill(WHITE)   ## displays winner screen
                     font1 = pygame.font.Font("freesansbold.ttf", 50)
                     text = font1.render("You won :)",True,BLACK)
                     screen.blit(text,(200,300))
                     pygame.display.flip()
                     t.sleep(1)
                     won = True
-                    running = False
+                    running = False ## starts next round or ends game
                 elif maze[player.y][player.x] == "2":
                     running = False
                 if maze[enemy1.y][enemy1.x] == "2":  ## checks if enemy has reached goal
@@ -243,7 +243,7 @@ def gamemode2(screen, mazetype, pathtype):
     run = True
     while run:
         screen.fill("light blue")
-        buttona = Button("Race computer",[230,150],RED,ORANGE,BLACK)    
+        buttona = Button("Race computer",[230,150],RED,ORANGE,BLACK)    ## menu to select modes for racing    
         buttona.hovering()
         buttona.draw(screen)
         buttonb = Button("2-Player Mode",[230,250],RED,ORANGE,BLACK)    
@@ -254,9 +254,9 @@ def gamemode2(screen, mazetype, pathtype):
         bbutton.draw(screen)
         pygame.display.flip()
         if buttona.check_clicked():   
-            computer_race(screen, mazetype, pathtype)
+            computer_race(screen, mazetype, pathtype)   ## run computer race
         if buttonb.check_clicked():   
-            two_player_mode(screen, mazetype)
+            two_player_mode(screen, mazetype)   ## run 2-player race
     
     
         
