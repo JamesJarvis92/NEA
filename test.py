@@ -1,219 +1,284 @@
+import pygame
+from Backtracking import *
+from Wilsons import *
+from DFS import *
+from A_star import *
+import time as t
+from Queue import *
 
-##### find way to remove duplicates from pqueue #######   or just cut list after 50 vals or something
+pygame.init()
+swidth = 720
+sheight = 720   ## change cell size based on size of mazes
+square_size = 24 ## need to calculate this based on maze size or just have set sizes for game modes
+mwidth = swidth // square_size
+mheight = sheight // square_size 
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+GREEN = (0, 255, 0)
+BLUE = ((0,0,255))
+RED = (255, 0, 0)
+GRAY = (192, 192, 192)
+ORANGE = ((255,100,10))
+font = pygame.font.Font("freesansbold.ttf", 24)
+screen = pygame.display.set_mode([720,720])
+
+class Button:
+    def __init__(self,txt,pos,mcol,ocol,textcol):
+        self.text = txt
+        self.pos = pos
+        self.mcol = mcol
+        self.ocol = ocol
+        self.textcol = textcol
+        self.button = pygame.rect.Rect((self.pos[0],self.pos[1]),(260,40))
+    
+    def draw(self,screen):
+        btn = pygame.draw.rect(screen, self.mcol, self.button,0,5)
+        pygame.draw.rect(screen, self.ocol, self.button,5,5)
+        font = pygame.font.Font("freesansbold.ttf", 24)
+        text = font.render(self.text,True,self.textcol)
+        screen.blit(text,(self.pos[0]+15,self.pos[1]+7))
+        
+    def check_clicked(self):
+        if self.button.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0]:
+            return True
+        else:
+            return False
+        
+    def hovering(self):
+        if (self.button).collidepoint(pygame.mouse.get_pos()):
+            temp = self.mcol
+            self.mcol = self.ocol
+            self.ocol = temp
+        
+def draw_maze(screen, maze):
+    for y in range(mheight):
+        for x in range(mwidth):
+            if maze[y][x] == "0":
+                pygame.draw.rect(screen, BLACK, (x * square_size, y * square_size, square_size, square_size))  ## draws path
+            elif maze[y][x] == "1":
+                pygame.draw.rect(screen, RED, (x * square_size, y * square_size, square_size, square_size)) ## draws walls
+            elif maze[y][x] == "x":
+                pygame.draw.rect(screen, RED, (x * square_size, y * square_size, square_size, square_size))
 
 
-from CreateMaze import *
-from Priority_Queue import *
 
-class Node():    ## node class for keeping track of parents and h,g,f cost
+class Player:
+    def __init__(self,color,pos):
+        self.color = color
+        self.x = pos[1]
+        self.y = pos[0]
+    def move(self, dx, dy, maze):
+        new_x = self.x + dx
+        new_y = self.y + dy
+        if 0 <= new_x < mwidth and 0 <= new_y < mheight and maze[new_y][new_x] != "0":  ## checks square trying to move to is valid
+            self.x = new_x    ## assigns new position
+            self.y = new_y
+            return True
+        else:
+            return False
 
-    def __init__(self, parent=None, position=None):
-        self.parent = parent
-        self.position = position
+    def draw(self, screen):
+        pygame.draw.rect(screen, self.color, (self.x * square_size, self.y * square_size, square_size, square_size))  ##  draws player
+        
+def load_screen(screen):
+    screen.fill(WHITE)
+    font1 = pygame.font.Font("freesansbold.ttf", 50)
+    text = font1.render("LOADING...",True,BLACK)
+    screen.blit(text,(200,300))
+    pygame.display.flip()
+    
 
-        self.g = 0
-        self.h = 0
-        self.f = 0
 
-    #def __eq__(self, other):
-        #return self.position == other.position   ## used for comparing two instances of class
+def two_player_mode(screen, mazetype):
+    load_screen(screen)
+    if mazetype == "Wilsons":
+        maze = WilsonsMazeGen(30) 
+    elif mazetype == "Backtracking":
+        maze = backtracking_maze()
+    player1 = Player(GREEN,[0,0])
+    player2 = Player(BLUE,[0,0])
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            elif event.type == pygame.KEYDOWN:    ## does movements 
+                if event.key == pygame.K_UP:
+                    player1.move(0, -1, maze)
+                elif event.key == pygame.K_DOWN:
+                    player1.move(0, 1, maze)
+                elif event.key == pygame.K_LEFT:
+                    player1.move(-1, 0, maze)
+                elif event.key == pygame.K_RIGHT:
+                    player1.move(1, 0, maze)
+                elif event.key == pygame.K_w:
+                    player2.move(0, -1, maze)
+                elif event.key == pygame.K_s:
+                    player2.move(0, 1, maze)
+                elif event.key == pygame.K_a:
+                    player2.move(-1, 0, maze)
+                elif event.key == pygame.K_d:
+                    player2.move(1, 0, maze)
+                elif event.key == pygame.K_ESCAPE:
+                    return None
+        screen.fill(WHITE)     ## when finished
+        draw_maze(screen, maze)  ## draws maze
+        player1.draw(screen)
+        player2.draw(screen)
+        if maze[player1.y][player1.x] == "2":  ## checks if player has reached goal
+            winner = 1
+            running = False
+        elif maze[player2.y][player2.x] == "2":
+            winner = 2
+            running = False
+        pygame.display.flip()
+        
+    ## shows winner
+    screen.fill(WHITE)
+    win_text = "Winner is player " + str(winner)
+    font1 = pygame.font.Font("freesansbold.ttf", 50)
+    text = font1.render(win_text,True,BLACK)
+    screen.blit(text,(200,300))
+    pygame.display.flip()    
+    t.sleep(1)
+    return None
+    
 
-def conv_to_num_array(maze):      ## turns into array of integers and changes end to a 1
-    nmaze = []
-    for row in maze:
-        line = []
-        for num in row:
-            if num == "2":
-                line.append(1)
-            else:
-                line.append(int(num))
+def gen_info():
+    times = Queue(5)
+    rounds = Queue(5)
+    for i in range(5):
+        time = (5-i)*100
+        times.enqueue(time)
+        rounds.enqueue(str(i+1))
+    return times, rounds
+
+
+def computer_race(screen,mazetype, pathtype):
+    lost = False
+    times, rounds = gen_info()
+    
+    end = False
+    screen = pygame.display.set_mode((swidth, sheight))  ## initialises screen
+    for i in range(5):
+        time = times.dequeue()
+        roun = rounds.dequeue()
+        print(time, roun)
+        if end == True:
+            break
+        if lost == False:
+            screen.fill(WHITE)
+            font1 = pygame.font.Font("freesansbold.ttf", 50)
+            string = "Round " + roun
+            text = font1.render(string,True,BLACK)
+            screen.blit(text,(200,300))
+            pygame.display.flip()
             
-        nmaze.append(line)
-    return nmaze
+            if mazetype == "Wilsons":
+                maze = WilsonsMazeGen(30) ## need to check maze is solvable with exit
+            elif mazetype == "Backtracking":
+                maze = backtracking_maze()
+            t.sleep(1)
+            end = find_end(maze)
+            if pathtype == "DFS":
+                enemy_moves = dfs(maze,[0,0],end)
+            elif pathtype == "A*":
+                enemy_moves = A_star(maze,[0,0],end)
+            esteps = conv_to_moves(enemy_moves)
+            player = Player(GREEN,[0,0])
+            enemy1 = Player(GRAY,[0,0])
+            running = True
+            won = False
+            timer = pygame.time.Clock()
+            ms = 0
+            esteps.pop(-1)
+            while running:
+                emove = 0
+                ms += timer.get_time()  ## add time since last tick to ms
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        running = False
+                    elif event.type == pygame.KEYDOWN:    ## does movements 
+                        if event.key == pygame.K_UP:
+                            player.move(0, -1, maze)
+                        elif event.key == pygame.K_DOWN:
+                            player.move(0, 1, maze)
+                        elif event.key == pygame.K_LEFT:
+                            player.move(-1, 0, maze)
+                        elif event.key == pygame.K_RIGHT:
+                            player.move(1, 0, maze)
+                        elif event.key == pygame.K_ESCAPE:
+                            running = False
+                            end = True
+                if ms>time:   ## checks how many milliseconds since last call
+                    try:
+                        step = esteps[0]
+                        enemy1.move(step[1],step[0],maze)
+                        esteps.pop(0)
+            
+                        ms = 0  ## resets time between enemy moves
+                    except:
+                        lost = True
+                        running = False
+                timer.tick()  ## increases timer
+                screen.fill(WHITE)     ## when finished
+                draw_maze(screen, maze)  ## draws maze
+                player.draw(screen)
+                enemy1.draw(screen)
+                if maze[player.y][player.x] == "2" and rounds == []:  ## checks if player has reached goal
+                    screen.fill(WHITE)
+                    font1 = pygame.font.Font("freesansbold.ttf", 50)
+                    text = font1.render("You won :)",True,BLACK)
+                    screen.blit(text,(200,300))
+                    pygame.display.flip()
+                    t.sleep(1)
+                    won = True
+                    running = False
+                elif maze[player.y][player.x] == "2":
+                    running = False
+                if maze[enemy1.y][enemy1.x] == "2":  ## checks if enemy has reached goal
+                    screen.fill(WHITE)
+                    font1 = pygame.font.Font("freesansbold.ttf", 50)
+                    text = font1.render("You lost :(",True,BLACK)
+                    screen.blit(text,(200,300))
+                    pygame.display.flip()
+                    t.sleep(1)
+                    
+                    
+                pygame.display.flip()
 
-def A_star(maze, start, end):
-    try:
-        start.append("x")
-        start = (start[0],start[1])
-    except:
-        pass
-    try:
-        end.append("x")
-        end = (end[0],end[1])
-    except:
-        pass
-    positions_in_open = []
-    maze = conv_to_num_array(maze)    ## convert to array for algorithm
-    #pprint(maze)
-    #print(start,end)
-    snode = Node(None, start)      
-    snode.g = snode.h = snode.f = 0    ## create start node
-    enode = Node(None, end)
-    enode.g = enode.h = enode.f = 0      ## create end node
-    list_of_open = PQueue()     ## make open/closed list
-    positions_in_open.append(snode.position)
-    list_of_closed = []
-    snode = Builder(snode,snode.f)
-    list_of_open.insert(snode)   ## add snode
 
-    while list_of_open.size() > 0:    ## loop until end is found
+
+    
+def gamemode2(screen, mazetype, pathtype):
+    #screen = pygame.display.set_mode([720,720])
+    run = True
+    while run:
+        screen.fill("light blue")
+        buttona = Button("Race computer",[230,150],RED,ORANGE,BLACK)    
+        buttona.hovering()
+        buttona.draw(screen)
+        buttonb = Button("2-Player Mode",[230,250],RED,ORANGE,BLACK)    
+        buttonb.hovering()
+        buttonb.draw(screen)
+        bbutton = Button("Back", [230,550],RED,ORANGE,BLACK)     ## quit button
+        bbutton.hovering()
+        bbutton.draw(screen)
+        pygame.display.flip()
+        if buttona.check_clicked():   
+            computer_race(screen, mazetype, pathtype)
+        if buttonb.check_clicked():   
+            two_player_mode(screen, mazetype)
+    
+    
         
-        
-        current_node = list_of_open.frontval()    ## gets current node
-        #print(current_node.position)
-        current_index = 0
-        #list_of_open = list_of_open[:50]
-        #print(list_of_open.size())
-        current_node = list_of_open.delete()
-        #print(current_node.position)
-        
-        #print("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
-        list_of_closed.append(current_node)
+   
+    
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT or bbutton.check_clicked():  ## checks to close program
+                run = False
+    
+        pygame.display.flip()
 
-        if current_node.position == enode.position:    ## check if finished
-            path = []
-            current = current_node
-            while current is not None:
-                path.append(current.position)
-                current = current.parent
-            #print("done")
-            return path[::-1]  ## returns path from start to end
-
-        children = []
-        for new_position in [(0, -1), (0, 1), (-1, 0), (1, 0)]: ## moves around cell
-            node_position = (current_node.position[0] + new_position[0], current_node.position[1] + new_position[1])   ## find node position
-            if node_position[0] > (len(maze) - 1) or node_position[0] < 0 or node_position[1] > (len(maze[len(maze)-1]) -1) or node_position[1] < 0:   ## check node in maze
-                continue   ## skip rest of iteration 
-            if maze[node_position[0]][node_position[1]] != 1:   ## check cell is path
-                continue    ## skip rest of iteration
-            new_node = Node(current_node, node_position)   ## new node
-            children.append(new_node)  ## add new node to children
-
-        
-        for child in children:
-            for closed_child in list_of_closed:    ## if child on closed list
-                if child == closed_child:
-                    continue   ## skip rest of iteration
-
-            child.g = current_node.g + 1     ## set g val
-            child.h = ((child.position[0] - enode.position[0]) ** 2) + ((child.position[1] - enode.position[1]) ** 2)    ## set h val
-            child.f = child.g + child.h    ## set f val
-
-            for onode in list_of_open.getlist():    ## if child already on open list
-                if child == onode and child.g > onode.g:
-                    continue     ## skip rest of iteration
-            nnode = Builder(child, child.f)
-            if nnode.data.position not in positions_in_open:
-                list_of_open.insert(nnode)   ## add child to open list
-                positions_in_open.append(nnode.data.position)
-            else:
-                pass
-    return False
-
-def conv_to_moves(moves):
-    steps = []
-    for i in range(len(moves)):
-        try:
-            ych = moves[i+1][0] - moves[i][0]
-        except:
-            pass
-        try:
-            xch = moves[i+1][1] - moves[i][1]
-        except:
-            pass
-        steps.append([ych,xch])
-    return steps
-
-
-nmaze = [[1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1],
-[0, 0, 1, 0, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 1],
-[1, 0, 1, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0],
-[1, 0, 1, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1],
-[0, 1, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 1, 1, 1],
-[0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-[0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1],
-[0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0],
-[0, 1, 0, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 1],
-[0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 1],
-[0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1],
-[0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0],
-[1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0],
-[0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1],
-[0, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 0, 1],
-[0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1],
-[0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1],
-[0, 1, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1],
-[0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0, 1],
-[0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1],
-[0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1],
-[0, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0],
-[1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1],
-[1, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 1],
-[1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1],
-[1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1],
-[0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0],
-[1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 1],
-[1, 0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1],
-[1, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1]]
-
-"""
-nmaze = [[1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1],
-    [1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1],
-    [1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1],
-    [1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1],
-    [1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1],
-    [1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1],
-    [1,1,0,1,1,0,1,1,1,1,1,1,1,1,1,1],
-    [1,1,0,1,0,1,1,1,1,1,1,1,1,1,1,1],
-    [1,1,0,1,0,1,1,1,1,1,1,1,1,1,1,1],
-    [1,1,0,1,0,1,0,1,1,1,1,1,1,1,1,1],
-    [1,1,0,1,1,1,0,1,1,1,1,1,1,1,1,1],
-    [1,1,0,1,0,1,0,1,1,1,1,1,1,1,1,1],
-    [1,1,1,1,0,1,0,1,1,1,1,1,1,1,1,1]]
-
-nmaze = [[1,0,1,1,1],
-         [1,0,1,0,1],
-         [1,1,1,0,1],
-         [1,1,1,0,1],
-         [1,1,1,0,1]]
-    """     
-nmaze = ["101000011000001111100000001011",
-"101000010011100011001111101010",
-"101011110010101101001000111011",
-"101110001110101001001110100001",
-"110101111010101001111001101111",
-"011110010010001010101001001010",
-"011010010011111011111001100110",
-"101100000101001000010010000111",
-"111111111111101000101010110100",
-"011110000010101011101111100111",
-"001011000110101110011101111101",
-"001101110010100011110101100100",
-"110011000111100010010000100110",
-"011011110101001110011111100010",
-"001111011001001011000010011011",
-"001001001110011000100110101001",
-"001001100001111011111100111001",
-"001010111111001001000001101001",
-"101110010100000011101100011001",
-"111101110101110010100101111110",
-"000101000000110010111110010010",
-"011011111110100000101101010010",
-"111010010011111111100101010010",
-"111110010000100000000101110010",
-"100010011100100100110111000020",
-"011111100011110101100100111110",
-"010010111010011111110101100100",
-"010000100011000100010100000111",
-"011101110001110111010111111001",
-"110111011111011001010000001101"]
-#print(conv_to_num_array(nmaze))
-start = [0, 0]
-end = [24, 28]
-
-path = A_star(nmaze, start, end)
-print(path)
-print(conv_to_moves(path))
-
-
-
+screen = pygame.display.set_mode([720,720])
+gamemode2(screen, "Wilsons", "DFS")

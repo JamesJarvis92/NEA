@@ -17,7 +17,7 @@ ORANGE = ((255,100,10))
 YELLOW = ((255,255,0))
 
 class Button:
-    def __init__(self,txt,pos,mcol,ocol,textcol):
+    def __init__(self,txt,pos,mcol,ocol,textcol):    ## initialise button class
         self.text = txt
         self.pos = pos
         self.mcol = mcol
@@ -25,19 +25,19 @@ class Button:
         self.textcol = textcol
         self.button = pygame.rect.Rect((self.pos[0],self.pos[1]),(260,40))
     
-    def draw(self):
+    def draw(self):       ## draws button
         btn = pygame.draw.rect(screen, self.mcol, self.button,0,5)
         pygame.draw.rect(screen, self.ocol, self.button,5,5)
         text = font.render(self.text,True,self.textcol)
         screen.blit(text,(self.pos[0]+15,self.pos[1]+7))
         
-    def check_clicked(self):
+    def check_clicked(self):   ## checks if clicked
         if self.button.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0]:
             return True
         else:
             return False
         
-    def hovering(self):
+    def hovering(self):      ## checks if hovering
         if (self.button).collidepoint(pygame.mouse.get_pos()):
             temp = self.mcol
             self.mcol = self.ocol
@@ -45,7 +45,7 @@ class Button:
         
         
 
-import pygame
+import pygame      ## pygame and game settings
 pygame.init()
 WIDTH = 720
 HEIGHT = 720
@@ -61,12 +61,11 @@ font1 = pygame.font.Font("freesansbold.ttf", 40)
 var = ["Wilsons","DFS"]
 run = True
 while run:
-    #print(var)
     screen.fill("light blue")
     timer.tick(fps)
     text = font1.render("MAZE ESCAPE",True,BLACK)
     screen.blit(text,(210,40))
-    button1 = Button("Normal Mode",[230,100],RED,ORANGE,BLACK)    ## G1     ### add buttons to array so code is pretty
+    button1 = Button("Normal Mode",[230,100],RED,ORANGE,BLACK)    ## G1    
     button1.hovering()
     button1.draw()
     button2 = Button("Race mode",[230,200],RED,ORANGE,BLACK)    ## G2
@@ -78,7 +77,7 @@ while run:
     button4 = Button("Escape enemies",[230,400],RED,ORANGE,BLACK)    ## G3
     button4.hovering()
     button4.draw()
-    optbutton = Button("Options",[230,500],RED,ORANGE,BLACK)
+    optbutton = Button("Options",[230,500],RED,ORANGE,BLACK)      ## option menu
     optbutton.hovering()
     optbutton.draw()
     qbutton = Button("QUIT", [230,600],RED,ORANGE,BLACK)     ## quit button
@@ -86,7 +85,7 @@ while run:
     qbutton.draw()
     
     pygame.display.flip()
-    if button1.check_clicked():   ### add time to complete (make maze with missing corner to have timer) and leaderboard,   countdown to start using while loop and sleep(1)
+    if button1.check_clicked():   ## checks if buttons are clicked and loads gamemodes
         gamemode1(screen,var[0])
     if button2.check_clicked():   
         gamemode2(screen,var[0],var[1])
@@ -95,7 +94,7 @@ while run:
     if button4.check_clicked():
         gamemode4(screen, var[0],var[1])
     if optbutton.check_clicked():
-        var = option_menu(screen,var[0],var[1])   ## [maze,path]
+        var = option_menu(screen,var[0],var[1])   ## [maze,path] option menu
         print(var)
    
     
