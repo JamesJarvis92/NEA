@@ -1,7 +1,4 @@
 
-## use queue to hold round numbers, time etc.
-## make new pathfinding a* 
-
 
 from Gamemode1 import *
 from Gamemode2 import *
